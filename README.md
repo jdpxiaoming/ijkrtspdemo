@@ -1,7 +1,7 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
-# 编译了ijk0.8.8
+# 编译了[ijk0.8.8](https://github.com/bilibili/ijkplayer)
 打开了rtsp的开关
 
 ```
