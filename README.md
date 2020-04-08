@@ -17,7 +17,7 @@ export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-protocol=tcp"
 ```
 
 # 运行demo
-> 直接运行ijkplayer-demo即可。
+> 直接运行ijkplayer-example即可。
 
 # 我编译时选择了target-25 
 > 所以你的targetAPI <= 25 最好，如果有高版本需求请自行编译. 
