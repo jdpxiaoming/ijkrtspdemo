@@ -87,10 +87,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-//        mVideoPath = "rtsp://admin:admin123@172.16.1.36/media/live";
-        mVideoPath = "rtsp://47.105.68.65:5555/rtsp/b35af5ad-3032-49c2-af9e-3c32f3fbe0cf";
-//        mVideoPath = "http://47.108.81.159:6681/rtsp/7e64df43-45b3-49fc-8d6e-d469aa6f4436/index_ts.m3u8";
-//        mVideoPath = "rtsp://172.16.3.251:8554/111";
+        mVideoPath = "rtsp://47.105.68.65:5555/rtsp/96adba88-b2ae-4e55-9e43-ebd9cbace698";
+//        mVideoPath = "rtsp://172.16.3.11";
         /*Intent intent = getIntent();
         String intentAction = intent.getAction();
         if (!TextUtils.isEmpty(intentAction)) {
