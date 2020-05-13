@@ -1,6 +1,23 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+
+### 根据播放地址类型设置不同的类型 .
+```java
+    public static final int IJK_TYPE_LIVING_WATCH = 1; //实时监控，要求首开速度,延迟略高一点
+    public static final int IJK_TYPE_LIVING_LOW_DELAY = 2; //实时直播要求低延迟，不要求首开熟读 .
+    public static final int IJK_TYPE_HTTP_PLAY = 3;//录播 mp4 /hls/flv...
+    public static final int IJK_TYPE_FILE_PLAY = 10;//本地文件播放 .
+    public static final int IJK_TYPE_PLAY_DEFAULT = IJK_TYPE_LIVING_WATCH;//默认播放类型.
+```
+
+- example 点播
+```java
+ mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
+```
+
+
+
 # 编译了[ijk0.8.8](https://github.com/bilibili/ijkplayer)
 打开了rtsp的开关
 
