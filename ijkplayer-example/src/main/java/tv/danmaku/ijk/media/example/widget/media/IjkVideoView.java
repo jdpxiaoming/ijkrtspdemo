@@ -38,17 +38,12 @@ import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-//import tv.danmaku.ijk.media.exo.IjkExoMediaPlayer;
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -64,6 +59,12 @@ import tv.danmaku.ijk.media.example.services.MediaPlayerService;
 
 public class IjkVideoView extends FrameLayout implements MediaController.MediaPlayerControl {
     private String TAG = "IjkVideoView";
+
+    public static final int IJK_TYPE_LIVING_WATCH = 1; //实时监控，要求首开速度,延迟略高一点
+    public static final int IJK_TYPE_LIVING_LOW_DELAY = 2; //实时直播要求低延迟，不要求首开熟读 .
+    public static final int IJK_TYPE_HTTP_PLAY = 3;//录播 mp4 /hls/flv...
+    public static final int IJK_TYPE_FILE_PLAY = 10;//本地文件播放 .
+    public static final int IJK_TYPE_PLAY_DEFAULT = IJK_TYPE_LIVING_WATCH;//默认播放类型.
     // settable by the client
     private Uri mUri;
     private Map<String, String> mHeaders;
@@ -126,6 +127,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private long mSeekEndTime = 0;
 
     private TextView subtitleDisplay;
+    /**
+     * 直播/点播类型
+     * {@link #IJK_TYPE_LIVING_LOW_DELAY
+     *   @link #IJK_TYPE_LIVING_WATCH
+     *   }
+     */
+    private int mURLType = IJK_TYPE_PLAY_DEFAULT;
 
     public IjkVideoView(Context context) {
         super(context);
@@ -249,18 +257,35 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * Sets video path.
      *
      * @param path the path of the video.
+     * @param urlType 播放地址的类型{@link #IJK_TYPE_LIVING_LOW_DELAY}
      */
-    public void setVideoPath(String path) {
-        setVideoURI(Uri.parse(path));
+    public void setVideoPath(String path , int urlType) {
+        setVideoURI(Uri.parse(path),urlType);
     }
 
+    /**
+     * Sets video path.
+     *
+     * @param path the path of the video.
+     */
+    public void setVideoPath(String path) {
+        setVideoPath(path,mURLType);
+    }
     /**
      * Sets video URI.
      *
      * @param uri the URI of the video.
+     * @param urlType {@link #IJK_TYPE_LIVING_LOW_DELAY}
      */
-    public void setVideoURI(Uri uri) {
-        setVideoURI(uri, null);
+    public void setVideoURI(Uri uri ,int urlType) {
+        setVideoURI(uri, null , urlType);
+    }
+    /**
+     * Sets video URI.
+     * @param uri the URI of the video.
+     */
+    public void setVideoURI(Uri uri ) {
+        setVideoURI(uri, mURLType);
     }
 
     /**
@@ -272,12 +297,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      *                changed with key/value pairs through the headers parameter with
      *                "android-allow-cross-domain-redirect" as the key and "0" or "1" as the value
      *                to disallow or allow cross domain redirection.
+     * @param urlType  {{@link #IJK_TYPE_LIVING_LOW_DELAY}}
      */
-    private void setVideoURI(Uri uri, Map<String, String> headers) {
+    private void setVideoURI(Uri uri, Map<String, String> headers ,int urlType) {
         mUri = uri;
         mHeaders = headers;
         mSeekWhenPrepared = 0;
-        openVideo();
+        openVideo(urlType);
         requestLayout();
         invalidate();
     }
@@ -300,7 +326,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void openVideo() {
+    private void openVideo(int urlType) {
         if (mUri == null || mSurfaceHolder == null) {
             // not ready for playback just yet, will try again later
             return;
@@ -313,11 +339,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         try {
-            mMediaPlayer = createPlayer(mSettings.getPlayer());
+            mMediaPlayer = createPlayer(mSettings.getPlayer(),urlType);
 
             // TODO: create SubtitleController in MediaPlayer, but we need
             // a context for the subtitle renderers
-            final Context context = getContext();
+//            final Context context = getContext();
             // REMOVED: SubtitleController
 
             // REMOVED: mAudioSession
@@ -690,7 +716,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             if (mMediaPlayer != null)
                 bindSurfaceHolder(mMediaPlayer, holder);
             else
-                openVideo();
+                openVideo(mURLType);
         }
 
         @Override
@@ -821,7 +847,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     public void resume() {
-        openVideo();
+        openVideo(mURLType);
     }
 
     @Override
@@ -990,7 +1016,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
         if (mRenderView != null)
             mRenderView.getView().invalidate();
-        openVideo();
+        openVideo(mURLType);
         return mSettings.getPlayer();
     }
 
@@ -1014,8 +1040,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return text;
     }
 
-    public IMediaPlayer createPlayer(int playerType) {
+    public IMediaPlayer createPlayer(int playerType ,int url_type) {
         IMediaPlayer mediaPlayer = null;
+
+        //暂不开放其他类型，只调用IJKMEIDAPLAYER.
 
         switch (playerType) {
             /*case Settings.PV_PLAYER__IjkExoMediaPlayer: {
@@ -1035,12 +1063,21 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
                     ijkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-                    //mp4+http点播.
-                    makeHttpPlayerMP4(ijkMediaPlayer);
-                    //互动营销低延迟<300ms.
-//                    makeLivingPlayerNoDelay(ijkMediaPlayer);
-                    //视频监控：首开速度快<500ms
-//                    makeFastOpenPlayer(ijkMediaPlayer);
+                    switch (mURLType){
+                        case IJK_TYPE_LIVING_LOW_DELAY://rtsp低延迟
+                            //互动营销低延迟<300ms.
+                            makeLivingPlayerNoDelay(ijkMediaPlayer);
+                            break;
+                        case IJK_TYPE_HTTP_PLAY://http 点播
+                            //mp4+http点播.
+                            makeHttpPlayerMP4(ijkMediaPlayer);
+                            break;
+                        case IJK_TYPE_LIVING_WATCH: //直播监控.
+                        default:{
+                            //视频监控：首开速度快<500ms
+                            makeFastOpenPlayer(ijkMediaPlayer);
+                            }
+                    }
                 }
                 mediaPlayer = ijkMediaPlayer;
             }
@@ -1180,54 +1217,36 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     private void makeHttpPlayerMP4(IjkMediaPlayer ijkMediaPlayer) {
         //安卓摄像头是默认Nv21，尝试Yv12。
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_YV12);
         //开启opensles.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
         //开启硬解码mediacodec
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
         //开启h265硬解码.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-mpeg4", 1);
-        //rtsp支持
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
-
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 1);
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
-
         //增加rtmp打开速度. 没有缓存会黑屏1s.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);//1316
-        // 是否开启预缓冲,直接禁用否则会有14s的卡顿缓冲时间.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);//1316
         // 每处理一个packet之后刷新io上下文
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L);
         // 不额外优化（使能非规范兼容优化，默认值0 ）
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "fast", 1);
         //最大帧率 20
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-fps", 20);
-//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
-        //                    "max-fps"
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
         // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 1000L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 500L);
         // 播放前的探测Size，默认是1M（1024）, 改小一点会出画面更快200
-        ijkMediaPlayer.setOption(1, "probesize", 1000L);
+        ijkMediaPlayer.setOption(1, "probesize", 10240L);
         // 自动旋屏
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
         // 处理分辨率变化
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 0);
-        // 最大缓冲大小,单位kb
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-buffer-size", 0);
-        //默认最小帧数2
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 2);
         // 最大缓存时长
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,  "max_cached_duration", 3); //300
-        // 跳过帧 ？？
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 1);
-        //丢帧多丢点5试试.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 10);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,  "max_cached_duration", 300); //300
         //清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
     }

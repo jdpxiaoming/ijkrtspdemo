@@ -85,7 +85,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/17c281cd-f4d8-4717-ac59-bcc1150a2161.mp4";
+        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/c0cc5b86-373c-49fa-bb9c-07aed7896efe.mp4";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
@@ -114,7 +114,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setHudView(mHudView);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {
