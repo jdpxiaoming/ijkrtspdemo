@@ -8,7 +8,7 @@
             android:persistent="true"
             android:summary="@string/pref_summary_enable_background_play"
             android:title="@string/pref_title_enable_background_play" />
-        <tv.danmaku.ijk.media.example.widget.preference.IjkListPreference
+        <tv.danmaku.ijk.media.ijkplayerview.widget.preference.IjkListPreference
             android:defaultValue="0"
             android:entries="@@array/pref_entries_player"
             android:entryValues="@array/pref_entry_values_player"

@@ -1,4 +1,4 @@
-include ':ijkplayer-armv7a'
+include ':ijkplayer-armv7a', ':ijkplayerview'
 include ':ijkplayer-arm64'
 
 include ':ijkplayer-java'

@@ -35,16 +35,17 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
+import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
+import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
+import tv.danmaku.ijk.media.ijkplayerview.widget.media.MeasureHelper;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.example.R;
-import tv.danmaku.ijk.media.example.application.Settings;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
 import tv.danmaku.ijk.media.example.fragments.TracksFragment;
-import tv.danmaku.ijk.media.example.widget.media.AndroidMediaController;
-import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
-import tv.danmaku.ijk.media.example.widget.media.MeasureHelper;
 
 /**
  * ijkplayer 视频播放类.
