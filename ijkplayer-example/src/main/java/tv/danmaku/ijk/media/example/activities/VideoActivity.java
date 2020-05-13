@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package tv.danmaku.ijk.media.example.activities;
 
 import android.content.Context;
@@ -36,7 +35,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
@@ -87,41 +85,11 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-        mVideoPath = "rtsp://47.105.68.65:5555/rtsp/96adba88-b2ae-4e55-9e43-ebd9cbace698";
-//        mVideoPath = "rtsp://172.16.3.11";
-        /*Intent intent = getIntent();
-        String intentAction = intent.getAction();
-        if (!TextUtils.isEmpty(intentAction)) {
-            if (intentAction.equals(Intent.ACTION_VIEW)) {
-                mVideoPath = intent.getDataString();
-            } else if (intentAction.equals(Intent.ACTION_SEND)) {
-                mVideoUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    String scheme = mVideoUri.getScheme();
-                    if (TextUtils.isEmpty(scheme)) {
-                        Log.e(TAG, "Null unknown scheme\n");
-                        finish();
-                        return;
-                    }
-                    if (scheme.equals(ContentResolver.SCHEME_ANDROID_RESOURCE)) {
-                        mVideoPath = mVideoUri.getPath();
-                    } else if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
-                        Log.e(TAG, "Can not resolve content below Android-ICS\n");
-                        finish();
-                        return;
-                    } else {
-                        Log.e(TAG, "Unknown scheme " + scheme + "\n");
-                        finish();
-                        return;
-                    }
-                }
-            }
-        }*/
+        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/17c281cd-f4d8-4717-ac59-bcc1150a2161.mp4";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }
-
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -177,16 +145,13 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     @Override
     public void onBackPressed() {
         mBackPressed = true;
-
         super.onBackPressed();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
         Log.i("poe","onStop()");
-
         if (mBackPressed || !mVideoView.isBackgroundPlayEnabled()) {
             mVideoView.stopPlayback();
             mVideoView.release(true);
@@ -243,7 +208,6 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
                 mDrawerLayout.openDrawer(mRightDrawer);
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -251,7 +215,6 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     public ITrackInfo[] getTrackInfo() {
         if (mVideoView == null)
             return null;
-
         return mVideoView.getTrackInfo();
     }
 
@@ -269,7 +232,6 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     public int getSelectedTrack(int trackType) {
         if (mVideoView == null)
             return -1;
-
         return mVideoView.getSelectedTrack(trackType);
     }
 }
