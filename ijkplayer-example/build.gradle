@@ -51,10 +51,10 @@ dependencies {
 //    implementation project(':ijkplayer-armv7a')
 //    implementation project(':ijkplayer-arm64')
 //    替换成包名依赖，方便打包上传nexus
-    implementation 'tv.danmaku.ijk.media:ijkplayer-view:0.8.8@aar'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8@aar'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.1@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.1'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.1@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.1@aar'
 //    内存泄漏辅助类
     debugImplementation ('com.squareup.leakcanary:leakcanary-android:2.2') {
         exclude group : 'com.android.support'

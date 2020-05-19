@@ -2,17 +2,17 @@
 
 buildscript {
     repositories {
-        google()
-        maven {
+        /*maven {
             url 'http://172.16.22.18:8081/repository/maven-public/'
-        }
+        }*/
+        google()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.2'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
-//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,10 +20,10 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         maven {
-            url 'http://172.16.22.18:8081/repository/maven-public/'
+            url "https://dl.bintray.com/media/maven"
         }
+        google()
         jcenter()
     }
 }

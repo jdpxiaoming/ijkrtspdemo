@@ -29,7 +29,4 @@ dependencies {
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
 }
 
-uploadArchives {
-
-}
-apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle");
+apply from: new File(rootProject.projectDir, "tools/gradle-bintray-upload.gradle");

@@ -25,7 +25,4 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
-uploadArchives {
-
-}
-apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle");
+apply from: new File(rootProject.projectDir, "tools/gradle-bintray-upload.gradle");

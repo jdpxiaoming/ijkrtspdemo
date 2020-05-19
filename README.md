@@ -2,6 +2,30 @@
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
 
+### 引入项目调用
+## 1. 引入私有库地址.
+```groovy
+allprojects {
+    repositories {
+        maven {
+            url "https://dl.bintray.com/media/maven"
+        }
+        google()
+        jcenter()
+    }
+}
+```
+
+## 2. 在主项目中build.gradle引入以下库
+```groovy
+    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.1@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.1'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.1@aar'
+    //看情况如果需要64位so则引入.
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.1@aar'
+```
+
 ### 根据播放地址类型设置不同的类型 .
 ```java
     public static final int IJK_TYPE_LIVING_WATCH = 1; //实时监控，要求首开速度,延迟略高一点
