@@ -2,7 +2,9 @@ package tv.danmaku.ijk.media.ijkplayerview.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.lang.reflect.Type;
 
 import tv.danmaku.ijk.media.ijkplayerview.R;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IMediaController;
@@ -30,6 +34,8 @@ public class IjkPrettyVideoView extends FrameLayout
 
     private static final String TAG = " IjkPrettyVideoView";
 
+    private int mLoadingColor = Color.rgb(255,255,255);
+    private int mRetryColor = Color.rgb(255,255,0);
     private TextView mHintTv;
     private IjkVideoView mIjkVideoView;
     /**
@@ -50,22 +56,28 @@ public class IjkPrettyVideoView extends FrameLayout
 
     public IjkPrettyVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init(attrs,defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public IjkPrettyVideoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
+        init(attrs,defStyleAttr);
     }
 
     /**
      * init attributes .
      * @param attrs
      */
-    private void init(AttributeSet attrs) {
+    private void init(AttributeSet attrs,int defStyle) {
         if (!this.isInEditMode()) {
             LayoutInflater.from(getContext()).inflate(R.layout.layout_ijk_pretty_video_view,this,true);
+
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs,R.styleable.IjkPrettyVideoView, defStyle, 0);
+            mLoadingColor = typedArray.getColor(R.styleable.IjkPrettyVideoView_loading_color,mLoadingColor);
+            mRetryColor = typedArray.getColor(R.styleable.IjkPrettyVideoView_retry_color,mRetryColor);
+            typedArray.recycle();
+
         }
     }
 
@@ -99,6 +111,7 @@ public class IjkPrettyVideoView extends FrameLayout
             mIjkVideoView.setOnInfoListener(this);
             mIjkVideoView.setOnCompletionListener(this);
 
+            mHintTv.setTextColor(mLoadingColor);
             mHintTv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,10 +121,12 @@ public class IjkPrettyVideoView extends FrameLayout
                             post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    mHintTv.setTextColor(mLoadingColor);
                                     mHintTv.setText(R.string.VideoView_loading);
                                     mHintTv.setVisibility(VISIBLE);
                                 }
                             });
+                            setVideoPath(mIjkVideoView.getUrl(),mIjkVideoView.getPlayType());
                             start();
 
                             if(null!= mIjkVideoView.getUrl()){
@@ -142,6 +157,7 @@ public class IjkPrettyVideoView extends FrameLayout
             post(new Runnable() {
                 @Override
                 public void run() {
+                    mHintTv.setTextColor(mLoadingColor);
                     mHintTv.setText(R.string.VideoView_loading);
                     mHintTv.setVisibility(VISIBLE);
                 }
@@ -183,6 +199,19 @@ public class IjkPrettyVideoView extends FrameLayout
     @Override
     public boolean onError(IMediaPlayer mp, int what, int extra) {
         Log.i(TAG," onError # " +what+" msg: "+extra);
+        // DO: 2020/5/26 视频解码失败，处理.
+        if(IjkMediaPlayer.MEDIA_ERROR_URL_INVALIDATE == what||
+                IjkMediaPlayer.MEDIA_ERROR_NO_STREAM == what){
+            //没有数据流，提示用过播放失败，点击重试.
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mHintTv.setTextColor(mRetryColor);
+                    mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
+                    mHintTv.setVisibility(VISIBLE);
+                }
+            });
+        }
         return false;
     }
 

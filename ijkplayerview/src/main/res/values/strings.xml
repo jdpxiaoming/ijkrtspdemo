@@ -71,5 +71,6 @@
 <string name="VideoView_player_IjkExoMediaPlayer">Player: IjkExoMediaPlayer</string>
 
  <string name="VideoView_loading">加载中...</string>
+ <string name="txt_video_meeting_no_input_stream_retry">播放失败，点击重试!</string>
 
 </resources>

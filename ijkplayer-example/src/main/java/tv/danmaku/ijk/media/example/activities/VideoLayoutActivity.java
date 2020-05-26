@@ -84,7 +84,7 @@ public class VideoLayoutActivity extends AppCompatActivity{
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/3dcde46f-9265-40be-8185-915e7653409c.mp4";
+        mVideoPath = "https://1ovopark-record.oss-cn-shanghai.aliyuncs.com/3dcde46f-9265-40be-8185-915e7653409c.mp4";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
@@ -98,6 +98,7 @@ public class VideoLayoutActivity extends AppCompatActivity{
         mVideoView = (IjkPrettyVideoView) findViewById(R.id.video_view);
         mScreenShotIv = (ImageView) findViewById(R.id.image_view);
         mVideoView.setMediaController(mMediaController);
+
         // prefer mVideoPath
         if (mVideoPath != null){
             mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);

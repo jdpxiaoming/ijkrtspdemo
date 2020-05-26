@@ -5,4 +5,10 @@
     <declare-styleable name="IjkListPreference">
         <attr name="entrySummaries" />
     </declare-styleable>
+
+    <declare-styleable name="IjkPrettyVideoView">
+        <attr name="loading_color" format="color|reference"/>
+        <attr name="retry_color" format="color|reference"/>
+    </declare-styleable>
+
 </resources>
