@@ -18,9 +18,11 @@ package tv.danmaku.ijk.media.example.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -33,6 +35,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -58,6 +61,7 @@ public class VideoLayoutActivity extends AppCompatActivity{
 
     private AndroidMediaController mMediaController;
     private IjkPrettyVideoView mVideoView;
+    private ImageView mScreenShotIv;
 
     public static Intent newIntent(Context context, String videoPath, String videoTitle) {
         Intent intent = new Intent(context, VideoLayoutActivity.class);
@@ -92,11 +96,25 @@ public class VideoLayoutActivity extends AppCompatActivity{
 
         // init player
         mVideoView = (IjkPrettyVideoView) findViewById(R.id.video_view);
+        mScreenShotIv = (ImageView) findViewById(R.id.image_view);
         mVideoView.setMediaController(mMediaController);
         // prefer mVideoPath
         if (mVideoPath != null){
             mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);
             mVideoView.start();
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bmp = mVideoView.getBitmap();
+                if(null != bmp){
+                    Log.i(TAG," screenshot success !");
+                    mScreenShotIv.setImageBitmap(bmp);
+                }else{
+                    Log.i(TAG," screenshot fail is NULL !");
+                }
+            }
+        },10*1000);
     }
 }

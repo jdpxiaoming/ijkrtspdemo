@@ -2,6 +2,7 @@ package tv.danmaku.ijk.media.ijkplayerview.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -75,6 +76,16 @@ public class IjkPrettyVideoView extends FrameLayout
 
     public void setLoadingListener(ILoadingListener mLoadingListener) {
         this.mLoadingListener = mLoadingListener;
+    }
+
+    /**
+     * get the video current screenshot.
+     * @return
+     */
+    public Bitmap getBitmap(){
+        if(null != mIjkVideoView) return mIjkVideoView.getBitmap();
+
+        return null;
     }
 
     @Override
@@ -190,7 +201,7 @@ public class IjkPrettyVideoView extends FrameLayout
             @Override
             public void run() {
                 mHintTv.setVisibility(INVISIBLE);
-                mIjkVideoView.requestFocus();
+//                mIjkVideoView.requestFocus();
             }
         });
     }
