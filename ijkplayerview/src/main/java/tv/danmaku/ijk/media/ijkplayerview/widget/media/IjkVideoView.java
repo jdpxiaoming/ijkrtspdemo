@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -51,8 +52,10 @@ import tv.danmaku.ijk.media.ijkplayerview.services.MediaPlayerService;
 import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaMeta;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
+import tv.danmaku.ijk.media.player.MediaInfo;
 import tv.danmaku.ijk.media.player.TextureMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.IMediaFormat;
@@ -189,6 +192,89 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 LayoutParams.WRAP_CONTENT,
                 Gravity.BOTTOM);
         addView(subtitleDisplay, layoutParams_txt);
+    }
+
+
+    public int getPlayType(){
+        return mURLType;
+    }
+
+    /**
+     * return the current uri .
+     * @return uri string . null if has not init by {@link #setVideoURI(Uri)}
+     */
+    public String getUrl(){
+
+        if(null != mUri) return mUri.toString();
+
+        return null;
+    }
+    
+    /**
+     * 视频截图.
+     * @return
+     */
+    public Bitmap getBitmap(){
+        if(mRenderView instanceof TextureRenderView){
+            TextureRenderView trv = (TextureRenderView) mRenderView;
+            return trv.getBitmap();
+        }
+        return  null;
+    }
+
+    /**
+     * 获取mediaInfo.
+     * @return
+     */
+    public MediaInfo getMediaInfo() {
+        if(null == mMediaController) return  null;
+        return mMediaPlayer.getMediaInfo();
+    }
+
+    /**
+     * 获取视频fps.
+     * @return
+     */
+    public int getVideoFps(){
+        int fps = 20;
+
+        MediaInfo codecInfo = mMediaPlayer.getMediaInfo();
+        if(null != codecInfo){
+            IjkMediaMeta mediaMeta = codecInfo.mMeta;
+            fps = mediaMeta.getInt(IjkMediaMeta.IJKM_KEY_FPS_NUM,fps);
+        }
+
+        return fps;
+    }
+
+    /**
+     * 获取视频流的比特率.
+     * @return
+     */
+    public int getVideoBitrate(){
+        int bitrate = 0;
+
+        MediaInfo codecInfo = mMediaPlayer.getMediaInfo();
+        if(null != codecInfo){
+            IjkMediaMeta mediaMeta = codecInfo.mMeta;
+            bitrate = mediaMeta.getInt(IjkMediaMeta.IJKM_KEY_BITRATE,bitrate);
+        }
+
+        return bitrate;
+    }
+
+    /**
+     * 获取纹理.
+     *
+     * @return renderView.
+     */
+    public View getTexture() {
+        if (null == mRenderView) return null;
+        if(mRenderView instanceof TextureRenderView){
+            TextureRenderView trv = (TextureRenderView) mRenderView;
+            return trv;
+        }
+        return (View) mRenderView;
     }
 
     public void setRenderView(IRenderView renderView) {
@@ -437,6 +523,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     IMediaPlayer.OnPreparedListener mPreparedListener = new IMediaPlayer.OnPreparedListener() {
         public void onPrepared(IMediaPlayer mp) {
             mPrepareEndTime = System.currentTimeMillis();
+            if (mHudViewHolder != null)
             mHudViewHolder.updateLoadCost(mPrepareEndTime - mPrepareStartTime);
             mCurrentState = STATE_PREPARED;
 
@@ -587,21 +674,21 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                             messageId = R.string.VideoView_error_text_unknown;
                         }
 
-                        new AlertDialog.Builder(getContext())
+                        /*new AlertDialog.Builder(getContext())
                                 .setMessage(messageId)
                                 .setPositiveButton(R.string.VideoView_error_button,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                            /* If we get here, there is no onError listener, so
+                                            *//* If we get here, there is no onError listener, so
                                              * at least inform them that the video is over.
-                                             */
+                                             *//*
                                                 if (mOnCompletionListener != null) {
                                                     mOnCompletionListener.onCompletion(mMediaPlayer);
                                                 }
                                             }
                                         })
                                 .setCancelable(false)
-                                .show();
+                                .show();*/
                     }
                     return true;
                 }
@@ -619,6 +706,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSeekComplete(IMediaPlayer mp) {
             mSeekEndTime = System.currentTimeMillis();
+            if (mHudViewHolder != null)
             mHudViewHolder.updateSeekCost(mSeekEndTime - mSeekStartTime);
         }
     };
@@ -833,6 +921,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         mTargetState = STATE_PLAYING;
     }
 
+    /**
+     * 设置音量.
+     * @param volume default:1.0f 0.0f表示静音
+     */
+    public void setVolume(float volume){
+        if(null != mMediaPlayer)
+            mMediaPlayer.setVolume(volume,volume);
+    }
+
     @Override
     public void pause() {
         if (isInPlaybackState()) {
@@ -1009,6 +1106,39 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return text;
     }
 
+
+
+    /**
+     * 是否为h265类型的视频
+     */
+    private boolean isH265 = false;
+
+    /**
+     * 是否打开硬解码.
+     * 默认打开.
+     */
+    private boolean isHardWare = true;
+
+    /**
+     * 判断当前播放的视频是否为硬解码.
+     * @return
+     */
+    public boolean isHardWare(){
+        //如果是h265默认开启软解码.
+        if(isH265) return false;
+
+        return isHardWare;
+    }
+
+    public boolean isH265() {
+        return isH265;
+    }
+
+    public void setH265(boolean h265) {
+        isH265 = h265;
+    }
+
+
     //-------------------------
     // Extend: Player
     //-------------------------
@@ -1064,7 +1194,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 IjkMediaPlayer ijkMediaPlayer = null;
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
-                    ijkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+                    ijkMediaPlayer.native_setLogLevel(mLogLevel);
                     switch (mURLType){
                         case IJK_TYPE_LIVING_LOW_DELAY://rtsp低延迟
                             //互动营销低延迟<300ms.
@@ -1094,19 +1224,37 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     /**
+     * 日志类别，default:无日志 .
+     */
+    private int mLogLevel = IjkMediaPlayer.IJK_LOG_SILENT;//默认无日制.
+    /**
+     * {@link IjkMediaPlayer#IJK_LOG_DEBUG}
+     */
+    public void setLogLevel(int logLevel){
+        mLogLevel = logLevel;
+        if(null != mMediaPlayer && mMediaPlayer instanceof IjkMediaPlayer){
+            ((IjkMediaPlayer)mMediaPlayer).native_setLogLevel(logLevel);
+        }
+    }
+    /**
      * 要求：首开速度快，延迟无所谓，低也可以接受
      * 首开速度：500ms以内.
      * @param ijkMediaPlayer
      */
     private void makeFastOpenPlayer(IjkMediaPlayer ijkMediaPlayer){
         //视频渲染格式，默认：RGB888 (IjkMediaPlayer.SDL_FCC_RV32).
+        if(isH265){
+            isHardWare = false;
+        }
+        int hardCode = isHardWare? 1 : 0;
+
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
         //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
         //开启硬解码mediacodec，开启后h265无法播放. do:h265关闭硬件加速
 //        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
         //开启h265硬解码.开启后h265无法播放. do:h265关闭硬件加速
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", 0);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
 
         //rtsp支持
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");

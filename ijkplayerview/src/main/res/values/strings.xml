@@ -70,4 +70,6 @@
 <string name="VideoView_player_IjkMediaPlayer">Player: IjkMediaPlayer</string>
 <string name="VideoView_player_IjkExoMediaPlayer">Player: IjkExoMediaPlayer</string>
 
+ <string name="VideoView_loading">加载中...</string>
+
 </resources>
