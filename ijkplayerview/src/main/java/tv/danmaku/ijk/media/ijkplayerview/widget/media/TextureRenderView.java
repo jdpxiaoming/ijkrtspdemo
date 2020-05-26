@@ -19,6 +19,12 @@ package tv.danmaku.ijk.media.ijkplayerview.widget.media;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -70,6 +76,10 @@ public class TextureRenderView extends TextureView implements IRenderView {
         mMeasureHelper = new MeasureHelper(this);
         mSurfaceCallback = new SurfaceCallback(this);
         setSurfaceTextureListener(mSurfaceCallback);
+        //初始化画面，渲染一帧画面.
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);//创建画笔
+        mSrcRect = new Rect();
+        mDstRect = new Rect();
     }
 
     @Override
@@ -366,5 +376,23 @@ public class TextureRenderView extends TextureView implements IRenderView {
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setClassName(TextureRenderView.class.getName());
+    }
+
+    private Paint mPaint;
+    private Rect mSrcRect;
+    private Rect mDstRect;
+
+    protected void onRendering(Bitmap bitmap) {
+        if (bitmap == null) {
+            return;
+        }
+        Canvas canvas = lockCanvas();//锁定画布
+        if (canvas != null) {
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);// 清空画布
+            mSrcRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());//这里我将2个rect抽离出去，防止重复创建
+            mDstRect.set(0, 0, getWidth(), getHeight());
+            canvas.drawBitmap(bitmap, mSrcRect, mDstRect, mPaint);//将bitmap画到画布上
+            unlockCanvasAndPost(canvas);//解锁画布同时提交
+        }
     }
 }

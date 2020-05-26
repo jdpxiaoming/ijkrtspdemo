@@ -79,12 +79,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private static final int MEDIA_INFO = 200;
 
     protected static final int MEDIA_SET_VIDEO_SAR = 10001;
-    /**准备好，准备播放**/
-    public static final int MP_STATE_PREPARED                               = 3;
-    /**开始缓冲**/
-    public static final int MEDIA_INFO_BUFFERING_START = 701;
-    /**缓冲结束**/
-    public static final int MEDIA_INFO_BUFFERING_END = 702;
     //----------------------------------------
     // options
     public static final int IJK_LOG_UNKNOWN = 0;
@@ -145,8 +139,20 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     public static final int FFP_PROP_INT64_TCP_SPEED                        = 20200;
     public static final int FFP_PROP_INT64_LATEST_SEEK_LOAD_DURATION        = 20300;
     public static final int FFP_PROP_INT64_IMMEDIATE_RECONNECT              = 20211;
-    //----------------------------------------
+    /**准备好，准备播放**/
+    public static final int MP_STATE_PREPARED                               = 3;
+    /**开始缓冲**/
+    public static final int MEDIA_INFO_BUFFERING_START = 701;
+    /**缓冲结束**/
+    public static final int MEDIA_INFO_BUFFERING_END = 702;
 
+    /** 无效流地址#错误 ，无效流 -10000**/
+    public static final int MEDIA_ERROR_URL_INVALIDATE = -10000;
+    /**
+     * 流没有正确推出来.
+     */
+    public static final int MEDIA_ERROR_NO_STREAM = -3;
+    //----------------------------------------
     @AccessedByNative
     private long mNativeMediaPlayer;
     @AccessedByNative

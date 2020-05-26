@@ -277,6 +277,18 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return (View) mRenderView;
     }
 
+    /**
+     * 渲染一帧图像.
+     * @param bitmap 将要显示的画面.
+     */
+    public void drawAFrame(Bitmap bitmap){
+        if(mRenderView instanceof TextureRenderView){
+            TextureRenderView trv = (TextureRenderView) mRenderView;
+            trv.onRendering(bitmap);
+            bitmap.recycle();
+        }
+    }
+
     public void setRenderView(IRenderView renderView) {
         if (mRenderView != null) {
             if (mMediaPlayer != null)
@@ -1152,6 +1164,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return mSettings.getPlayer();
     }
 
+    /**
+     * 根据视频解码类型，进行参数设置.
+     * @param isH265
+     * @return
+     */
+    public int togglePlayer(boolean isH265) {
+        setH265(isH265);
+        return togglePlayer();
+    }
+
     @NonNull
     public static String getPlayerText(Context context, int player) {
         String text;
@@ -1242,26 +1264,23 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * @param ijkMediaPlayer
      */
     private void makeFastOpenPlayer(IjkMediaPlayer ijkMediaPlayer){
-        //视频渲染格式，默认：RGB888 (IjkMediaPlayer.SDL_FCC_RV32).
-        if(isH265){
-            isHardWare = false;
-        }
-        int hardCode = isHardWare? 1 : 0;
-
+        //H265默认使用软解，硬解暂时不支持.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
-        //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
-        //开启硬解码mediacodec，开启后h265无法播放. do:h265关闭硬件加速
-//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-        //开启h265硬解码.开启后h265无法播放. do:h265关闭硬件加速
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
-
+        if(!isH265){
+            int hardCode = isHardWare? 1 : 0;
+            //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            //开启硬解码mediacodec，开启后h265无法播放. do:h265关闭硬件加速
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+            //开启h265硬解码.开启后h265无法播放. do:h265关闭硬件加速
+//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+        }
         //rtsp支持
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
         //开启丢帧策略.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 2);
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 1);
         //设置超时20s.
 //                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
         //增加rtmp打开速度. 没有缓存会黑屏1s.1024会导致声音出现卡顿，暂时保持1316播放一分钟未见卡顿.
@@ -1271,11 +1290,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         // 最大缓冲大小,单位kb
 //                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-buffer-size", 0);
         //最大帧率 20
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-fps", 20);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-fps", 25);
         // 无限读
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
         // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 80L);
         // 播放前的探测Size，默认是1M, 改小一点会出画面更快
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024L);
 
@@ -1289,13 +1308,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         // 是否开启预缓冲,直接禁用否则会有14s的卡顿缓冲时间.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
         //开启丢帧.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 5L);
         //准备好了就播放.提高首开熟读.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48L);
         // 播放重连次数
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"reconnect",5);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"reconnect",5);
         //清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
     }

@@ -121,9 +121,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7:23.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:preference-v7:23.0.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.jdpxiaoming:ijkplayer-java:0.0.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4:23.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7:23.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:23.0.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.jdpxiaoming:ijkplayer-java:0.0.2@aar" level="project" />
   </component>
 </module>
