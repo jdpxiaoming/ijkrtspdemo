@@ -18,12 +18,11 @@ allprojects {
 
 ## 2. 在主项目中build.gradle引入以下库
 ```groovy
-    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8@aar'
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.1@aar'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.1'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.1@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.6'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.5'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.5'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.1@aar'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.5'
 ```
 
 ### 根据播放地址类型设置不同的类型 .
