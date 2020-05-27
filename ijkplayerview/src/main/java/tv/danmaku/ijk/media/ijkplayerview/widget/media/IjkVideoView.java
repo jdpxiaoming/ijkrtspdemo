@@ -1208,6 +1208,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
         //暂不开放其他类型，只调用IJKMEIDAPLAYER.
 
+        //本地文件播放采用MediaPlayer进行播放.ijk部分本地视频会有音视频不同步问题.
+        if(IJK_TYPE_FILE_PLAY == mURLType){
+            playerType = Settings.PV_PLAYER__AndroidMediaPlayer;
+        }
+
         switch (playerType) {
             /*case Settings.PV_PLAYER__IjkExoMediaPlayer: {
              *//*IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);

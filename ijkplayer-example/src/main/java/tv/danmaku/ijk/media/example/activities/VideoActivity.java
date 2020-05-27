@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -86,11 +87,13 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-        mVideoPath = "rtsp://admin:admin123@172.16.4.149";
+//        mVideoPath = "rtsp://admin:admin123@172.16.4.149";
+        mVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/ml2.mp4";
 
-        if (!TextUtils.isEmpty(mVideoPath)) {
+
+        /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
-        }
+        }*/
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,7 +118,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setHudView(mHudView);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_FILE_PLAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {
