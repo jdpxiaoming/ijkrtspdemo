@@ -7,7 +7,7 @@ android {
     //noinspection GroovyAssignabilityCheck
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion as int
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
     buildTypes {
