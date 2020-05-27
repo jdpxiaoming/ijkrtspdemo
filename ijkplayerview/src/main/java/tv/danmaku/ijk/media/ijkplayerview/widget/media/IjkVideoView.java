@@ -404,6 +404,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     private void setVideoURI(Uri uri, Map<String, String> headers ,int urlType) {
         mUri = uri;
+        mURLType = urlType;
         mHeaders = headers;
         mSeekWhenPrepared = 0;
         openVideo(urlType);
@@ -1209,7 +1210,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         //暂不开放其他类型，只调用IJKMEIDAPLAYER.
 
         //本地文件播放采用MediaPlayer进行播放.ijk部分本地视频会有音视频不同步问题.
-        if(IJK_TYPE_FILE_PLAY == mURLType){
+        if(IJK_TYPE_FILE_PLAY == url_type){
             playerType = Settings.PV_PLAYER__AndroidMediaPlayer;
         }
 
