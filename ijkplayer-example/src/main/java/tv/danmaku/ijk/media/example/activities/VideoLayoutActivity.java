@@ -118,4 +118,11 @@ public class VideoLayoutActivity extends AppCompatActivity{
             }
         },10*1000);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IjkMediaPlayer.native_profileEnd();
+    }
 }

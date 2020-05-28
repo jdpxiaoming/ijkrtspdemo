@@ -183,7 +183,7 @@ public class IjkPrettyVideoView extends FrameLayout
             mIjkVideoView.release(true);
             mIjkVideoView.stopBackgroundPlay();
         }
-        IjkMediaPlayer.native_profileEnd();
+//        IjkMediaPlayer.native_profileEnd();
     }
 
     /**
