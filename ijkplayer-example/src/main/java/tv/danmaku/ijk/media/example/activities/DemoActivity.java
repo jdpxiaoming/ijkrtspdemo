@@ -27,4 +27,8 @@ public class DemoActivity extends AppCompatActivity  {
     public void goVideoLayout(View view) {
         VideoLayoutActivity.intentTo(this,"","video Layout loading .");
     }
+
+    public void goVideoCache(View view) {
+        VideoCacheActivity.intentTo(this,"","video cache play with local proxy .");
+    }
 }

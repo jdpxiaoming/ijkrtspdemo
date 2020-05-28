@@ -23,7 +23,7 @@ allprojects {
     implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.9'
     implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.9'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.8'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.9'
 ```
 
 ### 根据播放地址类型设置不同的类型 .

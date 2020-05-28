@@ -60,4 +60,6 @@ dependencies {
         exclude group : 'com.android.support'
     }
     implementation project(path: ':ijkplayerview')
+    //实现oss存储的mp4文件边下边播.
+    implementation 'com.danikula:videocache:2.7.1'
 }

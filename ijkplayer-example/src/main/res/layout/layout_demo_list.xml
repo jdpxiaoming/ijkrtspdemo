@@ -17,4 +17,11 @@
         android:layout_height="wrap_content"
         android:onClick="goVideoLayout"
         android:text="LoadingVideoLayout" />
+
+    <Button
+        android:id="@+id/cache_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goVideoCache"
+        android:text="Http边下边播Mp4" />
 </LinearLayout>

@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -29,7 +28,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +37,9 @@ import android.widget.TextView;
 
 import com.danikula.videocache.HttpProxyCacheServer;
 
+import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.application.PApplication;
+import tv.danmaku.ijk.media.example.fragments.TracksFragment;
 import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
@@ -47,15 +47,16 @@ import tv.danmaku.ijk.media.ijkplayerview.widget.media.MeasureHelper;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
-import tv.danmaku.ijk.media.example.R;
-import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
-import tv.danmaku.ijk.media.example.fragments.TracksFragment;
 
 /**
+ * 采用本地代理方法实现mp4文件边下边播功能.
+ * 使用开源框架 {https://github.com/danikula/AndroidVideoCache}.
  * ijkplayer 视频播放类.
+ * author : poe.Cai https://github.com/jdpxiaoming
+ * date   : 2020/5/28 10:31
  */
-public class VideoActivity extends AppCompatActivity implements TracksFragment.ITrackHolder {
-    private static final String TAG = "VideoActivity";
+public class VideoCacheActivity extends AppCompatActivity implements TracksFragment.ITrackHolder {
+    private static final String TAG = "VideoCacheActivity";
 
     private String mVideoPath ;
     private Uri    mVideoUri;
@@ -71,7 +72,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private long mLastStartTime = 0;
 
     public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-        Intent intent = new Intent(context, VideoActivity.class);
+        Intent intent = new Intent(context, VideoCacheActivity.class);
         intent.putExtra("videoPath", videoPath);
         intent.putExtra("videoTitle", videoTitle);
         return intent;
@@ -89,13 +90,15 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-//        mVideoPath = "rtsp://admin:admin123@172.16.4.149";
-//        mVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/ml2.mp4";
-        //3分钟mp4.
+        //3分钟视频.
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
         //30s视频
         mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
+
+        HttpProxyCacheServer proxy = PApplication.getProxy(this);
+        String proxyUrl = proxy.getProxyUrl(mVideoPath);
+
+
         /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }*/
@@ -123,7 +126,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setHudView(mHudView);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
+            mVideoView.setVideoPath(proxyUrl, IjkVideoView.IJK_TYPE_HTTP_PLAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {
