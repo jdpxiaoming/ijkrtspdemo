@@ -19,11 +19,16 @@ allprojects {
 ## 2. 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.10'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.10'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.10'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.11'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.11'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.11'
     //看情况如果需要64位so则引入.
     implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.10'
+```
+
+### 3. 设置View的填充模式
+```java
+mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
 ```
 
 ### 根据播放地址类型设置不同的类型 .

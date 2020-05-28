@@ -42,6 +42,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import tv.danmaku.ijk.media.example.application.PApplication;
 import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
+import tv.danmaku.ijk.media.ijkplayerview.widget.media.IRenderView;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.MeasureHelper;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -145,7 +146,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
             }
         });
 
-
+        mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
         mLastStartTime = SystemClock.currentThreadTimeMillis();
         Log.i(TAG,"start play ~~ #  "+mLastStartTime);
         mVideoView.start();
