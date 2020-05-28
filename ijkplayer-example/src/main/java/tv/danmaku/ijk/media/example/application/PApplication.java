@@ -21,7 +21,7 @@ public class PApplication extends Application {
     private HttpProxyCacheServer newProxy() {
 //        return new HttpProxyCacheServer(this);
         return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(1024 * 1024 * 1024)       // 1 Gb for cache
+                .maxCacheSize(10 * 1024 * 1024)       // 1 Gb for cache，oss的视频3分钟一般在10M以下.
                 .build();
     }
 }

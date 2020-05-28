@@ -31,4 +31,8 @@ public class DemoActivity extends AppCompatActivity  {
     public void goVideoCache(View view) {
         VideoCacheActivity.intentTo(this,"","video cache play with local proxy .");
     }
+
+    public void goVideoCache2(View view) {
+        VideoCache2Activity.intentTo(this,"","video cache play with local proxy .");
+    }
 }
