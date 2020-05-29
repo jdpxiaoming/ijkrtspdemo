@@ -140,6 +140,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     private int mURLType = IJK_TYPE_PLAY_DEFAULT;
 
+    /**
+     * 超时 毫秒. default 30*1000 ms .
+     */
+    private long mTimeOut = -1;
+
     public IjkVideoView(Context context) {
         super(context);
         initVideoView(context);
@@ -290,6 +295,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             trv.onRendering(bitmap);
             bitmap.recycle();
         }
+    }
+
+    /**
+     * 设置超时时间 单位 mms .
+     * ex: 30s  30*1000*1000 .
+     * this method should invoked before {@link #setVideoPath(String )}
+     * @param timeOut
+     */
+    public void setTimeOut(long timeOut){
+        this.mTimeOut = timeOut;
     }
 
     public void setRenderView(IRenderView renderView) {
@@ -1246,15 +1261,25 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     ijkMediaPlayer.native_setLogLevel(mLogLevel);
                     switch (mURLType){
                         case IJK_TYPE_LIVING_LOW_DELAY://rtsp低延迟
+                            if(mTimeOut > 0 ){
+                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "initial_timeout", mTimeOut);
+                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "stimeout", mTimeOut);
+                            }
                             //互动营销低延迟<300ms.
                             makeLivingPlayerNoDelay(ijkMediaPlayer);
                             break;
                         case IJK_TYPE_HTTP_PLAY://http 点播
+                            if(mTimeOut > 0 ){
+                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
+                            }
                             //mp4+http点播.
                             makeHttpPlayerMP4(ijkMediaPlayer);
                             break;
                         case IJK_TYPE_LIVING_WATCH: //直播监控.
                         default:{
+                            if(mTimeOut > 0 ){
+                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
+                            }
                             //视频监控：首开速度快<500ms
                             makeFastOpenPlayer(ijkMediaPlayer);
                             }
@@ -1309,7 +1334,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 2);
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 1);
         //设置超时20s.
-//                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
         //增加rtmp打开速度. 没有缓存会黑屏1s.1024会导致声音出现卡顿，暂时保持1316播放一分钟未见卡顿.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);//1316
         // 缩短播放的rtmp视频延迟在1s内

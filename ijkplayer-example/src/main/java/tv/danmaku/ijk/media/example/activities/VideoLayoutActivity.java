@@ -84,7 +84,8 @@ public class VideoLayoutActivity extends AppCompatActivity{
 
         // handle arguments
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/3dcde46f-9265-40be-8185-915e7653409c.mp4";
+//        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/3dcde46f-9265-40be-8185-915e7653409c.mp4";
+        mVideoPath = "rtsp://admin:admin123@172.16.4.140";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
@@ -98,6 +99,7 @@ public class VideoLayoutActivity extends AppCompatActivity{
         mVideoView = (IjkPrettyVideoView) findViewById(R.id.video_view);
         mScreenShotIv = (ImageView) findViewById(R.id.image_view);
         mVideoView.setMediaController(mMediaController);
+        mVideoView.setTimeout(5*1000*1000);
 
         // prefer mVideoPath
         if (mVideoPath != null){
@@ -118,7 +120,6 @@ public class VideoLayoutActivity extends AppCompatActivity{
             }
         },10*1000);
     }
-
 
     @Override
     protected void onDestroy() {

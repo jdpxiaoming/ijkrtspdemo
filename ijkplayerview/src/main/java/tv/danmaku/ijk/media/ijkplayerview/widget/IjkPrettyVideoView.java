@@ -100,6 +100,15 @@ public class IjkPrettyVideoView extends FrameLayout
         return null;
     }
 
+    /**
+     * {@link IjkVideoView#setTimeOut(long)}
+     * @param timeout
+     */
+    public void setTimeout(long timeout){
+        if(null != mIjkVideoView)
+        mIjkVideoView.setTimeOut(timeout);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -110,6 +119,7 @@ public class IjkPrettyVideoView extends FrameLayout
             mIjkVideoView.setOnErrorListener(this);
             mIjkVideoView.setOnInfoListener(this);
             mIjkVideoView.setOnCompletionListener(this);
+            //set timeout 10s.
 
             mHintTv.setTextColor(mLoadingColor);
             mHintTv.setOnClickListener(new OnClickListener() {
