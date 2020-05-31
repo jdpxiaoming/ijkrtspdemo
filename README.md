@@ -19,16 +19,22 @@ allprojects {
 ## 2. 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.13'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.13'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.13'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.14'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.14'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.14'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.10'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.14'
 ```
 
 ### 3. 设置View的填充模式
 ```java
 mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
+```
+
+### 4. Rtsp超时.
+```java
+//超时单位微妙.2s = 2*1000*1000 
+mVideoView.setTimeout(2*1000*1000);
 ```
 
 ### 根据播放地址类型设置不同的类型 .

@@ -101,6 +101,13 @@ public class IjkPrettyVideoView extends FrameLayout
     }
 
     /**
+     * {@link IjkVideoView#setLogLevel(int)}
+     * @param logLevel
+     */
+    public void setLogLevel(int logLevel){
+        if(null != mIjkVideoView) mIjkVideoView.setLogLevel(logLevel);
+    }
+    /**
      * {@link IjkVideoView#setTimeOut(long)}
      * @param timeout
      */

@@ -1241,6 +1241,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             playerType = Settings.PV_PLAYER__AndroidMediaPlayer;
         }
 
+
         switch (playerType) {
             /*case Settings.PV_PLAYER__IjkExoMediaPlayer: {
              *//*IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);
@@ -1259,27 +1260,24 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
                     ijkMediaPlayer.native_setLogLevel(mLogLevel);
+
+                    //ijk不支持rtmp设置超时，原因是ffmpeg的问题 .
+                    if(mTimeOut > 0 ){
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "initial_timeout", mTimeOut);
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "stimeout", mTimeOut);
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
+                    }
                     switch (mURLType){
                         case IJK_TYPE_LIVING_LOW_DELAY://rtsp低延迟
-                            if(mTimeOut > 0 ){
-                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "initial_timeout", mTimeOut);
-                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "stimeout", mTimeOut);
-                            }
                             //互动营销低延迟<300ms.
                             makeLivingPlayerNoDelay(ijkMediaPlayer);
                             break;
                         case IJK_TYPE_HTTP_PLAY://http 点播
-                            if(mTimeOut > 0 ){
-                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
-                            }
                             //mp4+http点播.
                             makeHttpPlayerMP4(ijkMediaPlayer);
                             break;
                         case IJK_TYPE_LIVING_WATCH: //直播监控.
                         default:{
-                            if(mTimeOut > 0 ){
-                                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
-                            }
                             //视频监控：首开速度快<500ms
                             makeFastOpenPlayer(ijkMediaPlayer);
                             }

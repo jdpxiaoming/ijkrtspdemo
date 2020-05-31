@@ -99,11 +99,12 @@ public class VideoLayoutActivity extends AppCompatActivity{
         mVideoView = (IjkPrettyVideoView) findViewById(R.id.video_view);
         mScreenShotIv = (ImageView) findViewById(R.id.image_view);
         mVideoView.setMediaController(mMediaController);
-        mVideoView.setTimeout(5*1000*1000);
+        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        mVideoView.setTimeout(2*1000*1000);
 
         // prefer mVideoPath
         if (mVideoPath != null){
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
             mVideoView.start();
         }
 
