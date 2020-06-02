@@ -1165,6 +1165,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     /**
      * 是否打开硬解码.
      * 默认打开.
+     * h265自动忽略。不支持硬解码.
      */
     private boolean isHardWare = true;
 
@@ -1177,6 +1178,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         if(isH265) return false;
 
         return isHardWare;
+    }
+
+    /**
+     * 设置是否采用硬解，
+     *  you should set this before {@link #setVideoPath(String)}
+     * @param hardWare
+     */
+    public void setHardWare(boolean hardWare){
+        this.isHardWare = hardWare;
     }
 
     public boolean isH265() {
@@ -1321,9 +1331,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
             //开启硬解码mediacodec，开启后h265无法播放. do:h265关闭硬件加速
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
             //开启h265硬解码.开启后h265无法播放. do:h265关闭硬件加速
-//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
         }
         //rtsp支持
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
@@ -1377,12 +1387,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         //安卓摄像头是默认Nv21，尝试Yv12。
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_YV12);
 
-        //开启opensles.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-        //开启硬解码mediacodec
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0);
-        //开启h265硬解码.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", 0);
+        if(!isH265){
+            int hardCode = isHardWare? 1 : 0;
+            //开启opensles.
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            //开启硬解码mediacodec
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
+            //开启h265硬解码.
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+        }
+
         //rtsp支持
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
@@ -1436,12 +1450,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private void makeHttpPlayerMP4(IjkMediaPlayer ijkMediaPlayer) {
         //安卓摄像头是默认Nv21，尝试Yv12。
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_YV12);
-        //开启opensles.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-        //开启硬解码mediacodec
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-        //开启h265硬解码.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-mpeg4", 1);
+        if(!isH265){
+            int hardCode = isHardWare? 1 : 0;
+            //开启opensles.
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            //开启硬解码mediacodec
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
+            //开启h265硬解码.
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+        }
+
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 1);
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
