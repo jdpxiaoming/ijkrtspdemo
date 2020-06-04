@@ -81,6 +81,13 @@ public class IjkPrettyVideoView extends FrameLayout
         }
     }
 
+    /**
+     *  return the inner {@link IjkVideoView}
+     * @return
+     */
+    public IjkVideoView getVideoView() {
+        return mIjkVideoView;
+    }
 
     public void setTextClickListener(ITextClickListener textClickListener) {
         this.mTextClickListener = textClickListener;
