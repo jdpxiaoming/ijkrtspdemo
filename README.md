@@ -35,6 +35,11 @@ mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
 mVideoView.setTimeout(2*1000*1000);
 ```
 
+### 设置渲染View为`surrfaceView`默认：`TexutureView`
+```java
+ mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
+```
+
 ### 视图拉伸模式
 ```java
 //拉伸满屏.
