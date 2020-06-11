@@ -1,8 +1,7 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
-### 引入项目调用
-## 1. 引入私有库地址.
+## 引入私有库地址.
 ```groovy
 allprojects {
     repositories {
@@ -15,26 +14,43 @@ allprojects {
 }
 ```
 
-## 2. 在主项目中build.gradle引入以下库
+## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.15'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.16'
     implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.15'
     implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.15'
     //看情况如果需要64位so则引入.
     implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.15'
 ```
 
-### 3. 设置View的填充模式
+### 设置View的填充模式
 ```java
 mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
 ```
 
-### 4. Rtsp超时.
+### Rtsp超时.
 ```java
 //超时单位微妙.2s = 2*1000*1000 
 mVideoView.setTimeout(2*1000*1000);
 ```
+
+### 视图拉伸模式
+```java
+//拉伸满屏.
+ mIjkVideoView.setAspectRatio(IRenderView.AR_MATCH_PARENT);
+
+
+public interface IRenderView {
+    int AR_ASPECT_FIT_PARENT = 0;
+    int AR_ASPECT_FILL_PARENT = 1;
+    int AR_ASPECT_WRAP_CONTENT = 2;
+    int AR_MATCH_PARENT = 3;
+    int AR_16_9_FIT_PARENT = 4;
+    int AR_4_3_FIT_PARENT = 5;
+    ...
+    }
+``` 
 
 ### 根据播放地址类型设置不同的类型 .
 ```java

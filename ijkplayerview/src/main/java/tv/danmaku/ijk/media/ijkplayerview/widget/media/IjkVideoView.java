@@ -1385,7 +1385,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     private void makeLivingPlayerNoDelay(IjkMediaPlayer ijkMediaPlayer) {
         //安卓摄像头是默认Nv21，尝试Yv12。
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_YV12);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
 
         if(!isH265){
             int hardCode = isHardWare? 1 : 0;
@@ -1449,7 +1449,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     private void makeHttpPlayerMP4(IjkMediaPlayer ijkMediaPlayer) {
         //安卓摄像头是默认Nv21，尝试Yv12。
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_YV12);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
         if(!isH265){
             int hardCode = isHardWare? 1 : 0;
             //开启opensles.
