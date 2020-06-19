@@ -86,7 +86,7 @@ public class VideoLayoutActivity extends AppCompatActivity{
         //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/3dcde46f-9265-40be-8185-915e7653409c.mp4";
 //        mVideoPath = "rtsp://admin:admin123@172.16.4.140";
-        mVideoPath = "http://47.104.129.125:5580/55000000000000000011100013000000-3.flv";
+        mVideoPath = "rtsp://47.108.81.159:5555/rtsp/ee42de6d-7947-49ac-b52d-44e31f0e34d8";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);

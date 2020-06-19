@@ -97,7 +97,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
         //30s视频
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
-        mVideoPath = "http://47.104.129.125:5580/55000000000000000011100013000000-3.flv";
+        mVideoPath = "rtsp://47.108.81.159:5555/rtsp/ee42de6d-7947-49ac-b52d-44e31f0e34d8";
         /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }*/
@@ -118,7 +118,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // init player
         IjkMediaPlayer.loadLibrariesOnce(null);
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+        IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
 
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mVideoView.setMediaController(mMediaController);
@@ -126,7 +126,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {
