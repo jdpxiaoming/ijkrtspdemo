@@ -1,6 +1,8 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+# 更换git库测试. 内网服务绑成大赛被重用
+
 ## 引入私有库地址.
 ```groovy
 allprojects {
