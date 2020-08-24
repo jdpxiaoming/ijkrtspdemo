@@ -97,7 +97,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
         //30s视频
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
-        mVideoPath = "rtsp://47.108.81.159:5555/rtsp/ee42de6d-7947-49ac-b52d-44e31f0e34d8";
+        mVideoPath = "http://47.105.240.204:5580/55000000000000000011100024200000-1.flv";
         /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }*/

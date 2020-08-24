@@ -13,7 +13,6 @@ import tv.danmaku.ijk.media.example.R;
 public class DemoActivity extends AppCompatActivity  {
     private static final String TAG = "DemoActivity";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,5 +33,13 @@ public class DemoActivity extends AppCompatActivity  {
 
     public void goVideoCache2(View view) {
         VideoCache2Activity.intentTo(this,"","video cache play with local proxy .");
+    }
+
+    /**
+     * 下载页面.
+     * @param view
+     */
+    public void goVideoDownload(View view) {
+        VideoDownloadActivity.intentTo(this);
     }
 }

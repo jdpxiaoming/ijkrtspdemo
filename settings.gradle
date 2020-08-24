@@ -1,3 +1,4 @@
+include ':ffmpeg-cmd'
 include ':ijkplayer-armv7a', ':ijkplayerview'
 include ':ijkplayer-arm64'
 

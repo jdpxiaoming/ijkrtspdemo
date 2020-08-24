@@ -1339,11 +1339,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
         //开启丢帧策略.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 2);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 1);
         //设置超时20s.
         //增加rtmp打开速度. 没有缓存会黑屏1s.1024会导致声音出现卡顿，暂时保持1316播放一分钟未见卡顿.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);//1316
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1100);//1316
         // 缩短播放的rtmp视频延迟在1s内
 //                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
         // 最大缓冲大小,单位kb
@@ -1355,7 +1355,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         // 设置播放前的最大探测时间 （100未测试是否是最佳值）
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 80L);
         // 播放前的探测Size，默认是1M, 改小一点会出画面更快
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 800L);
 
         // 每处理一个packet之后刷新io上下文
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L);
@@ -1366,6 +1366,8 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
         // 是否开启预缓冲,直接禁用否则会有14s的卡顿缓冲时间.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
+        // 跳过帧 ？？
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 0);
         //开启丢帧.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 5L);
         //准备好了就播放.提高首开熟读.

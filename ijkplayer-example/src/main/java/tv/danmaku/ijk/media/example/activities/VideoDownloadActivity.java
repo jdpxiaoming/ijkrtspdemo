@@ -1,247 +1,177 @@
-/*
- * Copyright (C) 2015 Bilibili
- * Copyright (C) 2015 Zhang Rui <bbcallen@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package tv.danmaku.ijk.media.example.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Toast;
 
-import com.danikula.videocache.HttpProxyCacheServer;
+import com.jdpxiaoming.ffmpeg_cmd.FFmpegCmd;
+import com.jdpxiaoming.ffmpeg_cmd.FFmpegFactory;
+import com.jdpxiaoming.ffmpeg_cmd.FFmpegUtil;
+import java.io.File;
 
 import tv.danmaku.ijk.media.example.R;
-import tv.danmaku.ijk.media.example.application.PApplication;
-import tv.danmaku.ijk.media.example.fragments.TracksFragment;
-import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
-import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
-import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
-import tv.danmaku.ijk.media.ijkplayerview.widget.media.MeasureHelper;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
-/**
- * 播放打视频，测试videoCache是否会自动清理文件. 结果：yes .
- * 采用本地代理方法实现mp4文件边下边播功能.
- * 使用开源框架 {https://github.com/danikula/AndroidVideoCache}.
- * ijkplayer 视频播放类.
- * author : poe.Cai https://github.com/jdpxiaoming
- * date   : 2020/5/28 10:31
- */
-public class VideoCache2Activity extends AppCompatActivity implements TracksFragment.ITrackHolder {
-    private static final String TAG = "VideoCacheActivity";
+public class VideoDownloadActivity extends AppCompatActivity {
 
-    private String mVideoPath ;
-    private Uri    mVideoUri;
+    private static final String TAG = "MainActivity";
+    private int requestPermissionCode = 10086;
+    private String[] requestPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
-    private AndroidMediaController mMediaController;
-    private IjkVideoView mVideoView;
-    private TextView mToastTextView;
-    private TableLayout mHudView;
-    private DrawerLayout mDrawerLayout;
-    private ViewGroup mRightDrawer;
-    private Settings mSettings;
-    private boolean mBackPressed;
-    private long mLastStartTime = 0;
-
-    public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-        Intent intent = new Intent(context, VideoCache2Activity.class);
-        intent.putExtra("videoPath", videoPath);
-        intent.putExtra("videoTitle", videoTitle);
-        return intent;
-    }
-
-    public static void intentTo(Context context, String videoPath, String videoTitle) {
-        context.startActivity(newIntent(context, videoPath, videoTitle));
+    public static void intentTo(Context context) {
+        Intent intent = new Intent(context, VideoDownloadActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player);
+        setContentView(R.layout.activity_download);
+        // Example of a call to a native method
+        // Example of a call to a native method
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+            if(PermissionChecker.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED){
+                requestPermissions(requestPermission,requestPermissionCode);
+            }
+        }
+    }
 
-        mSettings = new Settings(this);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1001:
+                // 1001的请求码对应的是申请打电话的权限
+                // 判断是否同意授权，PERMISSION_GRANTED 这个值代表的是已经获取了权限
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(VideoDownloadActivity.this, "你同意授权了", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(VideoDownloadActivity.this, "你不同意授权", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
 
-        // handle arguments
-        //3分钟视频.8.9M左右
-        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
-        HttpProxyCacheServer proxy = PApplication.getProxy(this);
-        String proxyUrl = proxy.getProxyUrl(mVideoPath);
-
-
-        /*if (!TextUtils.isEmpty(mVideoPath)) {
-            new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
-        }*/
-        // init UI
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        mMediaController = new AndroidMediaController(this, false);
-        mMediaController.setSupportActionBar(actionBar);
-
-        mToastTextView = (TextView) findViewById(R.id.toast_text_view);
-        mHudView = (TableLayout) findViewById(R.id.hud_view);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mRightDrawer = (ViewGroup) findViewById(R.id.right_drawer);
-
-        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
-
-        // init player
-        IjkMediaPlayer.loadLibrariesOnce(null);
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
-
-        mVideoView = (IjkVideoView) findViewById(R.id.video_view);
-        mVideoView.setMediaController(mMediaController);
-        mVideoView.setHudView(mHudView);
-        // prefer mVideoPath
-        if (mVideoPath != null)
-            mVideoView.setVideoPath(proxyUrl, IjkVideoView.IJK_TYPE_HTTP_PLAY);
-        else if (mVideoUri != null)
-            mVideoView.setVideoURI(mVideoUri);
-        else {
-            Log.e(TAG, "Null Data Source\n");
-            finish();
+    /**
+     * 视频转码 flv->mp4.
+     * @param view
+     */
+    public void videoTransform(View view) {
+        String inputPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/58.flv";
+        String outputPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/807.mp4";
+        File input =new File(inputPath);
+        if(!input.exists()){
+            Toast.makeText(VideoDownloadActivity.this, "/Download/58.flv not found!", Toast.LENGTH_LONG).show();
             return;
         }
+        File output =new File(outputPath);
+        if(output.exists()){
+            output.delete();
+        }
+        //cmds for ffmpeg flv->mp4.
+//        inputPath ="http://106.14.218.234:5581/rtsp/0d427a62-3f7b-44e6-b81f-e891ba79f994/live.flv";
+        inputPath = "http://47.105.240.204:5580/55000000000000000011100008200000-2.flv";
 
-        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+//        String[] commands = FFmpegFactory.buildRtsp2Mp4(inputPath,outputPath);
+        String[] commands = FFmpegFactory.buildFlv2Mp4(inputPath,outputPath);
+
+        FFmpegUtil.getInstance().enQueueTask(commands, 0,new FFmpegUtil.onCallBack() {
             @Override
-            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-                Log.e(TAG, "onInfo#position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
-                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
-                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
-                    Log.i("poe", "加载视频prepare耗时#=====================> " + takeTime + " ms");
-                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
-                }
-                return false;
+            public void onStart() {
+
+                Log.i(TAG," onStart # ");
+            }
+
+            @Override
+            public void onFailure() {
+                Log.i(TAG," onFailure # ");
+                Toast.makeText(VideoDownloadActivity.this, "transcode failed ,please check your input file !", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i(TAG," onComplete # ");
+                Toast.makeText(VideoDownloadActivity.this, "transcode successful!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onProgress(float progress) {
+                Log.i(TAG," onProgress # "+progress);
+            }
+        });
+    }
+
+    /**
+     * 停止命令.
+     * @param view
+     */
+    public void stopRun(View view) {
+        FFmpegUtil.getInstance().stopTask();
+    }
+
+
+    /**
+     * 测试 cmd 下载flv.
+     * @param view
+     */
+    public void dumpFlvCmd(View view){
+        String inputPath = "http://47.105.240.204:5580/55000000000000000011100024200000-0.flv";
+        String outputPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/819.mp4";
+        File output =new File(outputPath);
+        if(output.exists()){
+            output.delete();
+        }
+
+        //cmds for ffmpeg flv->mp4.
+//        String[] commands = FFmpegFactory.buildRtsp2Mp4(inputPath,outputPath);
+        String[] commands = FFmpegFactory.buildFlv2Mp4(inputPath,outputPath);
+
+        FFmpegUtil.getInstance().enQueueTask(commands, 0,new FFmpegUtil.onCallBack() {
+            @Override
+            public void onStart() {
+
+                Log.i(TAG," onStart # ");
+            }
+
+            @Override
+            public void onFailure() {
+                Log.i(TAG," onFailure # ");
+                Toast.makeText(VideoDownloadActivity.this, "transcode failed ,please check your input file !", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i(TAG," onComplete # ");
+                Toast.makeText(VideoDownloadActivity.this, "transcode successful!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onProgress(float progress) {
+                Log.i(TAG," onProgress # "+progress);
             }
         });
 
-
-        mLastStartTime = SystemClock.currentThreadTimeMillis();
-        Log.i(TAG,"start play ~~ #  "+mLastStartTime);
-        mVideoView.start();
     }
 
-    @Override
-    public void onBackPressed() {
-        mBackPressed = true;
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("poe","onStop()");
-        if (mBackPressed || !mVideoView.isBackgroundPlayEnabled()) {
-            mVideoView.stopPlayback();
-            mVideoView.release(true);
-            mVideoView.stopBackgroundPlay();
-        } else {
-            mVideoView.enterBackground();
-        }
-        IjkMediaPlayer.native_profileEnd();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_player, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_toggle_ratio) {
-            int aspectRatio = mVideoView.toggleAspectRatio();
-            String aspectRatioText = MeasureHelper.getAspectRatioText(this, aspectRatio);
-            mToastTextView.setText(aspectRatioText);
-            mMediaController.showOnce(mToastTextView);
-            return true;
-        } else if (id == R.id.action_toggle_player) {
-            int player = mVideoView.togglePlayer();
-            String playerText = IjkVideoView.getPlayerText(this, player);
-            mToastTextView.setText(playerText);
-            mMediaController.showOnce(mToastTextView);
-            return true;
-        } else if (id == R.id.action_toggle_render) {
-            int render = mVideoView.toggleRender();
-            String renderText = IjkVideoView.getRenderText(this, render);
-            mToastTextView.setText(renderText);
-            mMediaController.showOnce(mToastTextView);
-            return true;
-        } else if (id == R.id.action_show_info) {
-            mVideoView.showMediaInfo();
-        } else if (id == R.id.action_show_tracks) {
-            if (mDrawerLayout.isDrawerOpen(mRightDrawer)) {
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.right_drawer);
-                if (f != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.remove(f);
-                    transaction.commit();
-                }
-                mDrawerLayout.closeDrawer(mRightDrawer);
-            } else {
-                Fragment f = TracksFragment.newInstance();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.right_drawer, f);
-                transaction.commit();
-                mDrawerLayout.openDrawer(mRightDrawer);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public ITrackInfo[] getTrackInfo() {
-        if (mVideoView == null)
-            return null;
-        return mVideoView.getTrackInfo();
-    }
-
-    @Override
-    public void selectTrack(int stream) {
-        mVideoView.selectTrack(stream);
-    }
-
-    @Override
-    public void deselectTrack(int stream) {
-        mVideoView.deselectTrack(stream);
-    }
-
-    @Override
-    public int getSelectedTrack(int trackType) {
-        if (mVideoView == null)
-            return -1;
-        return mVideoView.getSelectedTrack(trackType);
+    public void dumpFlv(View view) {
+        Log.i(TAG," dump Flv and save mp4！");
+        //flv测试ok.
+        String input = "http://47.105.240.204:5580/55000000000000000011100019400000-3.flv";//flv测试流.
+        //1. h265+pcma 测试failed 猜测是音频格式pcma无法封装成mp4格式.
+//        input = "rtsp://47.108.81.159:5555/rtsp/4d598b02-e3f7-4499-a55a-8edbe13074cb";//rtsp 测试流
+        //2. h264+aac 测试ok.
+//        input = "http://118.31.174.18:5581/rtsp/662e1f9e-a06e-4e0a-9b73-a6d07620b3a4/live.flv";
+        String output = new File(Environment.getExternalStorageDirectory(),"/poe/output86.mp4").getAbsolutePath();
+        FFmpegCmd.dump_stream(input , output);
     }
 }
