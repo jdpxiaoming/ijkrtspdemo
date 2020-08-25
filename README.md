@@ -1,6 +1,14 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+
+# 0.0.18 优化直播延时.
+- 升级ffmpeg3.4->ffmpeg4.0
+- 优化直播0延时观看flv 
+
+# 0.0.17 修改ffmpeg的打包名字，解决和其他ffmpeg库的冲突. 
+- 修改libijkffmpeg.so->libijkwdzffmpeg 
+
 # 更换git库测试. 内网服务绑成大赛被重用
 
 ## 引入私有库地址.
@@ -19,11 +27,11 @@ allprojects {
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.17'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.17'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.17'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.18'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.18'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.18'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.17'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.18'
 ```
 
 
