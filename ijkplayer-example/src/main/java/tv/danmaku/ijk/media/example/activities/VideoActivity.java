@@ -97,7 +97,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
         //30s视频
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
-        mVideoPath = "http://47.105.240.204:5580/55000000000000000011100024200000-1.flv";
+        mVideoPath = "http://101.133.156.114:5581/rtsp/d99ff087-82a1-4ca8-9624-d5a130588ba5.flv";
         /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }*/
@@ -122,14 +122,15 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
 
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
-        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEFAULT);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
         mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        //打开视频0延迟.
+        mVideoView.openZeroVideoDelay(true);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {

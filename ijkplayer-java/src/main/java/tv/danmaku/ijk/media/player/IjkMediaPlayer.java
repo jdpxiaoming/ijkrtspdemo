@@ -928,8 +928,24 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         _setOption(category, name, value);
     }
 
+    /**
+     * 是否开启视频0延迟开关.
+     * @param isOpen  true：开启0延迟 ptz控制会达到0延迟 默认关闭：false.
+     */
+    public void setVideoZeroDelay(boolean isOpen){
+//        _setZeroDelay(isOpen?1:0);
+    }
+
     private native void _setOption(int category, String name, String value);
     private native void _setOption(int category, String name, long value);
+
+    /**
+     * 设置是否开启延时开关，ptz需要0延迟
+     * 0： 关闭 default
+     * 1:  开启0延迟video，音频会延迟2s,待解决.
+     * @param delayOpen
+     */
+    private native void _setZeroDelay(int delayOpen);
 
     public Bundle getMediaMeta() {
         return _getMediaMeta();
@@ -959,6 +975,8 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private native void native_finalize();
 
     private native void native_message_loop(Object IjkMediaPlayer_this);
+
+
 
     protected void finalize() throws Throwable {
         super.finalize();

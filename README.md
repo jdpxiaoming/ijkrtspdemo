@@ -2,6 +2,11 @@
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
 
+#0.0.19 增加0延迟开关（0延迟会有2s的音频不同步出现，慎用）
+```java
+ //打开视频0延迟.
+ mVideoView.openZeroVideoDelay(true);
+```
 # 0.0.18 优化直播延时.
 - 升级ffmpeg3.4->ffmpeg4.0
 - 优化直播0延时观看flv 
@@ -27,11 +32,11 @@ allprojects {
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.18'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.18'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.18'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.19'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.19'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.19'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.18'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.19'
 ```
 
 

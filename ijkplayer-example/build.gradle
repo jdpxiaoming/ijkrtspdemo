@@ -15,6 +15,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        ndk {
+            abiFilters 'armeabi-v7a','arme64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -47,19 +50,19 @@ dependencies {
     implementation 'com.android.support:preference-v7:23.0.1'
     implementation 'com.android.support:support-annotations:23.0.1'
     implementation 'com.squareup:otto:1.3.8'
+    implementation project(':ijkplayerview')
     implementation project(':ijkplayer-java')
     implementation project(':ijkplayer-armv7a')
-    implementation project(':ijkplayer-arm64')
+//    implementation project(':ijkplayer-arm64')
 //    替换成包名依赖，方便打包上传nexus
-    /*implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.1@aar'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.1'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.1@aar'
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.1@aar'*/
+//    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.18'
+//    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.18'
+//    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.18'
+//    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.1@aar'
 //    内存泄漏辅助类
     debugImplementation ('com.squareup.leakcanary:leakcanary-android:2.2') {
         exclude group : 'com.android.support'
     }
-    implementation project(path: ':ijkplayerview')
     //实现oss存储的mp4文件边下边播.
     implementation 'com.danikula:videocache:2.7.1'
 }

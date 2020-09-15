@@ -1241,6 +1241,20 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return text;
     }
 
+    private boolean isVideoZeroDelay = false;
+
+    /**
+     * @param isOpen true:打开0延迟  false :关闭.
+     */
+    public void openZeroVideoDelay(boolean isOpen){
+        isVideoZeroDelay = isOpen;
+        if(mMediaPlayer != null){
+            if(mMediaPlayer instanceof IjkMediaPlayer){
+                ((IjkMediaPlayer)mMediaPlayer).setVideoZeroDelay(isVideoZeroDelay);
+            }
+        }
+    }
+
     public IMediaPlayer createPlayer(int playerType ,int url_type) {
         IMediaPlayer mediaPlayer = null;
 
@@ -1270,7 +1284,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
                     ijkMediaPlayer.native_setLogLevel(mLogLevel);
-
+                    ijkMediaPlayer.setVideoZeroDelay(isVideoZeroDelay);
                     //ijk不支持rtmp设置超时，原因是ffmpeg的问题 .
                     if(mTimeOut > 0 ){
                         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "initial_timeout", mTimeOut);
@@ -1342,18 +1356,20 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         //设置超时20s.
         //增加rtmp打开速度. 没有缓存会黑屏1s.1024会导致声音出现卡顿，暂时保持1316播放一分钟未见卡顿.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);//1316
-        // 缩短播放的rtmp视频延迟在1s内
-//                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
         // 最大缓冲大小,单位kb
-//                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-buffer-size", 0);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-buffer-size", 1316);
+        //默认最小帧数2
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 2);
+        // 最大缓存时长
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,  "max_cached_duration", 1); //300
         //最大帧率 20
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-fps", 25);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "max-fps", 15L);
         // 无限读
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1L);
         // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 80L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 90L);//100 延迟1.7s 80-》2.5s延迟
         // 播放前的探测Size，默认是1M, 改小一点会出画面更快
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024L);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240L);
 
         // 每处理一个packet之后刷新io上下文
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L);
@@ -1365,11 +1381,12 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         // 是否开启预缓冲,直接禁用否则会有14s的卡顿缓冲时间.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
         // 跳过帧 ？？
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 0);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 0L);
         //丢帧多丢点5试试.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 5);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 5L);
         //准备好了就播放.提高首开熟读.
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1L);
+
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48L);
         // 播放重连次数
