@@ -24,9 +24,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:23.0.1'
     implementation 'com.android.support:preference-v7:23.0.1'
-//    implementation project(path: ':ijkplayer-java')
+    implementation project(path: ':ijkplayer-java')
 //    替换成包名依赖，方便打包上传nexus
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.19'
+//    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.19'
 }
 
 apply from: new File(rootProject.projectDir, "tools/gradle-bintray-upload.gradle");

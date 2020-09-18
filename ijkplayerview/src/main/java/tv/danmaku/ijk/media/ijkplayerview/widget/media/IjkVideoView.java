@@ -1247,15 +1247,20 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * @param isOpen true:打开0延迟  false :关闭.
      */
     public void openZeroVideoDelay(boolean isOpen){
+        Log.e(TAG, "openZeroVideoDelay  ~"+isOpen);
         isVideoZeroDelay = isOpen;
         if(mMediaPlayer != null){
             if(mMediaPlayer instanceof IjkMediaPlayer){
+                Log.e(TAG, "openZeroVideoDelay#setVideoZeroDelay \n");
                 ((IjkMediaPlayer)mMediaPlayer).setVideoZeroDelay(isVideoZeroDelay);
             }
+        }else{
+            Log.e(TAG, "openZeroVideoDelay  ~mMediaPlayer "+mMediaPlayer);
         }
     }
 
     public IMediaPlayer createPlayer(int playerType ,int url_type) {
+        Log.e(TAG,"createPlayer~url_type"+url_type+" playerType"+playerType);
         IMediaPlayer mediaPlayer = null;
 
         //暂不开放其他类型，只调用IJKMEIDAPLAYER.
@@ -1284,6 +1289,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
                     ijkMediaPlayer.native_setLogLevel(mLogLevel);
+                    Log.e(TAG,"create mediaplayer#setVideoZeroDelay!~"+isVideoZeroDelay);
                     ijkMediaPlayer.setVideoZeroDelay(isVideoZeroDelay);
                     //ijk不支持rtmp设置超时，原因是ffmpeg的问题 .
                     if(mTimeOut > 0 ){

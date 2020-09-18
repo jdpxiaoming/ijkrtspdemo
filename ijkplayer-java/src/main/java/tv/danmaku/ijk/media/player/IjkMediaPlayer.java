@@ -933,7 +933,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      * @param isOpen  true：开启0延迟 ptz控制会达到0延迟 默认关闭：false.
      */
     public void setVideoZeroDelay(boolean isOpen){
-//        _setZeroDelay(isOpen?1:0);
+        _setZeroDelay(isOpen?1:0);
     }
 
     private native void _setOption(int category, String name, String value);
