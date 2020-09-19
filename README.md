@@ -1,7 +1,31 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+# 0.0.20 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
+- you should invoke this method befor xx.setVideoPath!
+```c
+/**
+* 0延时开关. 
+*@delayOpen  0:关闭 1：开启 默认关闭. 
+*/
+static void
+IjkMediaPlayer_setZeroDelay(JNIEnv *env, jobject thiz, jint delayOpen)
+{
+    ALOGD("IjkMediaPlayer_setZeroDelay delay_forbidden =  %d",delayOpen);
+    MPTRACE("%s\n", __func__);
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+	  //给mediaplayer赋值. 
+    mp->ffplayer->delay_forbidden = delayOpen;
+    //如果打开0延迟则设置视频为主同步
+    if(delayOpen){
+      mp->ffplayer->av_sync_type  = AV_SYNC_VIDEO_MASTER; 
+    } else {
+      mp->ffplayer->av_sync_type  = AV_SYNC_AUDIO_MASTER; 
+    }
+    ijkmp_dec_ref_p(&mp);
+}
 
+```
 #0.0.19 增加0延迟开关（0延迟会有2s的音频不同步出现，慎用）
 ```java
  //打开视频0延迟.
@@ -32,11 +56,11 @@ allprojects {
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.19'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.19'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.19'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.20'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.20'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.20'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.19'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.20'
 ```
 
 
