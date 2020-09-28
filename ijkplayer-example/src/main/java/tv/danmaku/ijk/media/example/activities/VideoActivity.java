@@ -97,7 +97,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
         //30s视频
 //        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
-        mVideoPath = "http://106.75.213.97:5581/rtsp/44af83a4-8355-4c08-87ef-349c0aca7726.flv";
+        mVideoPath = "rtsp://47.108.81.159:5555/rtsp/fd8e699b-993b-4365-86c4-ceb26b2b1d1e";//东方广场店-H265 .
+//        mVideoPath = "http://106.75.254.198:5581/rtsp/a6759726-e057-459e-8a15-5a5f319ddd06.flv";//kktest - O4球机.
         /*if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
         }*/
@@ -125,11 +126,17 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setHudView(mHudView);
         mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-        //打开视频0延迟.
-        mVideoView.openZeroVideoDelay(true);
+        //设置h265
+        if(mVideoPath.startsWith("rtsp")){
+            mVideoView.setH265(true);
+            mVideoView.openZeroVideoDelay(false);
+        }else{
+            //打开视频0延迟.
+            mVideoView.openZeroVideoDelay(true);
+        }
+
         // prefer mVideoPath
         if (mVideoPath != null)
-
             mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
