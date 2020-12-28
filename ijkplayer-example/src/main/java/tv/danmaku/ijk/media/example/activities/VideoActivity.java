@@ -90,18 +90,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        //h265测试.rtsp://47.104.185.91:5555/rtsp/968e6862-96a2-4a5d-afb3-0594784d5af4
-//        mVideoPath = "rtsp://admin:admin123@172.16.4.149";
-//        mVideoPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/ml2.mp4";
-        //3分钟mp4.
-//        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
-        //30s视频
-//        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4";
-        mVideoPath = "rtsp://47.108.81.159:5555/rtsp/fd8e699b-993b-4365-86c4-ceb26b2b1d1e";//东方广场店-H265 .
-//        mVideoPath = "http://106.75.254.198:5581/rtsp/a6759726-e057-459e-8a15-5a5f319ddd06.flv";//kktest - O4球机.
-        /*if (!TextUtils.isEmpty(mVideoPath)) {
-            new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
-        }*/
+        mVideoPath = "http://113.31.102.114:5581/rtsp/3a1be6d7-0c59-48d6-a6a5-3fedbf22e521.flv";//东方广场店-H265 .
+
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

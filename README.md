@@ -1,6 +1,9 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+# 0.0.21 关闭无效的vp_duration的log信息.
+- 2020/12/28 publish. 
+
 # 0.0.20 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
 - you should invoke this method befor xx.setVideoPath!
 ```c
