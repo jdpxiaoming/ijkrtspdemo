@@ -3,14 +3,16 @@ package tv.danmaku.ijk.media.example.activities;
 
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import tv.danmaku.ijk.media.example.R;
 
 /**
  * demo 入口.
  */
-public class DemoActivity extends AppCompatActivity  {
+public class DemoActivity extends AppCompatActivity {
     private static final String TAG = "DemoActivity";
 
 

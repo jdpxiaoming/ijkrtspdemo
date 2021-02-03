@@ -33,7 +33,9 @@ public class IjkPrettyVideoView extends FrameLayout
                 IjkMediaPlayer.OnCompletionListener{
 
     private static final String TAG = " IjkPrettyVideoView";
-
+    private IMediaPlayer.OnCompletionListener mOnCompletionListener;
+    private IMediaPlayer.OnErrorListener mOnErrorListener;
+    private IMediaPlayer.OnInfoListener mOnInfoListener;
     private int mLoadingColor = Color.rgb(255,255,255);
     private int mRetryColor = Color.rgb(255,255,0);
     private TextView mHintTv;
@@ -123,6 +125,20 @@ public class IjkPrettyVideoView extends FrameLayout
         mIjkVideoView.setTimeOut(timeout);
     }
 
+
+
+    public void setOnInfoListener(IMediaPlayer.OnInfoListener l){
+        mOnInfoListener = l;
+    }
+
+    public void setOnErrorListener(IMediaPlayer.OnErrorListener l) {
+        mOnErrorListener = l;
+    }
+
+    public void setOnCompletionListener(IMediaPlayer.OnCompletionListener l) {
+        mOnCompletionListener = l;
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -199,6 +215,15 @@ public class IjkPrettyVideoView extends FrameLayout
     }
 
     /**
+     * pause 。
+     */
+    public void pause() {
+        if(null != mIjkVideoView){
+            mIjkVideoView.pause();
+        }
+    }
+
+    /**
      * 停止播放 & 销毁资源 .
      */
     public void release(){
@@ -207,7 +232,6 @@ public class IjkPrettyVideoView extends FrameLayout
             mIjkVideoView.release(true);
             mIjkVideoView.stopBackgroundPlay();
         }
-//        IjkMediaPlayer.native_profileEnd();
     }
 
     /**
@@ -236,6 +260,8 @@ public class IjkPrettyVideoView extends FrameLayout
                 }
             });
         }
+
+        if(null != mOnErrorListener) mOnErrorListener.onError(mp , what , extra);
         return false;
     }
 
@@ -246,6 +272,7 @@ public class IjkPrettyVideoView extends FrameLayout
         if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
             hideTips();
         }
+        if(null != mOnInfoListener) mOnInfoListener.onInfo(mp , what , extra) ;
         return false;
     }
 
@@ -268,6 +295,26 @@ public class IjkPrettyVideoView extends FrameLayout
     @Override
     public void onCompletion(IMediaPlayer mp) {
         Log.i(TAG," onCompletion ()~ ");
+        if(null != mOnCompletionListener) mOnCompletionListener.onCompletion(mp);
+    }
+
+    /**
+     * seek to dst pos.
+     * @param seekPos
+     */
+    public void seekTo(int seekPos) {
+        if(null != mIjkVideoView && seekPos > 0 ){
+            mIjkVideoView.seekTo(seekPos);
+        }
+    }
+
+    /**
+     * 获取当前播放进度.
+     * @return
+     */
+    public int getCurrentPosition(){
+        if(null != mIjkVideoView) return mIjkVideoView.getCurrentPosition();
+        return 0;
     }
 
     /**

@@ -19,42 +19,26 @@ package tv.danmaku.ijk.media.example.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
-import tv.danmaku.ijk.media.example.fragments.TracksFragment;
-import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.ijkplayerview.widget.IjkPrettyVideoView;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
-import tv.danmaku.ijk.media.ijkplayerview.widget.media.MeasureHelper;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
 /**
  * ijkplayer 视频播放类.
  */
-public class VideoLayoutActivity extends AppCompatActivity{
+public class VideoLayoutActivity extends AppCompatActivity {
     private static final String TAG = "VideoLayoutActivity";
 
     private String mVideoPath ;
