@@ -79,7 +79,6 @@ class VideoCacheActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_cache)
         // init UI
-
         // init player
         mVideoView = findViewById<View>(R.id.video_view) as IjkPrettyVideoView
         mScreenShotIv = findViewById<View>(R.id.image_view) as ImageView
@@ -104,17 +103,9 @@ class VideoCacheActivity : AppCompatActivity() {
         mVideoView?.setMediaController(mMediaController)
         mVideoView?.setOnInfoListener { mp, what, extra ->
             Log.e(TAG, "onInfo#position: " + mp.currentPosition + " what: " + what + " extra: " + extra)
-            if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
+            if (IjkMediaPlayer.MEDIA_ERROR_NO_STREAM == what) {
                 val takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime
-                Log.i("poe", "加载视频prepare耗时#=====================> $takeTime ms")
-                // 如果有seek操作，seek到指定位置.
-                if(mSeekPos > 0 ){
-                    mVideoView?.postDelayed({
-                        mVideoView?.seekTo(mSeekPos)
-                        //恢复未seek状态.
-                        mSeekPos = -1;
-                    }, 200)
-                }
+                Log.i(TAG, "加载视频prepare耗时#=====================> $takeTime ms")
             }
             false
         }
@@ -123,12 +114,19 @@ class VideoCacheActivity : AppCompatActivity() {
 
 
         btnPlay?.setOnClickListener {
-
             mVideoView?.start()
+            // 如果有seek操作，seek到指定位置.其实ijkplayer提供的pause在下层已经记录了seek再次start就会调用不需要额外的操作.
+            if(mSeekPos > 0 ){
+                mVideoView?.postDelayed({
+                    mVideoView?.seekTo(mSeekPos)
+                    //恢复未seek状态.
+                    mSeekPos = -1;
+                }, 200)
+            }
         }
 
         btnPause?.setOnClickListener{
-            // TODO: 2021/2/3 pause the video and record current progress.
+            // DO: 2021/2/3 pause the video and record current progress.
             mVideoView?.let{
                 mSeekPos = it.currentPosition;
                 Log.i(TAG, "current pause pos is : $mSeekPos")
