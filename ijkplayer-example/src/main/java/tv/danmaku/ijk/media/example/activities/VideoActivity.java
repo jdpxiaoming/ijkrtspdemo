@@ -86,6 +86,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // handle arguments
         mVideoPath = "http://113.31.102.114:5581/rtsp/3a1be6d7-0c59-48d6-a6a5-3fedbf22e521.flv";//东方广场店-H265 .
+        mVideoPath = "file:///storage/emulated/0/7561446b9d98faaaf634b918d412dd96.mp4";//东方广场店-H265 .
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -109,7 +110,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
-        mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
+        mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //设置h265
         if(mVideoPath.startsWith("rtsp")){
@@ -122,7 +123,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_FILE_PLAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {

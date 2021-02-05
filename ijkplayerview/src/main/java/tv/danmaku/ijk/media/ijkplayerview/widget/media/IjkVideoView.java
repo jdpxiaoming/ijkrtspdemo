@@ -130,6 +130,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private long mSeekStartTime = 0;
     private long mSeekEndTime = 0;
+    /**
+     * 忽略角度旋转.
+     */
+    private boolean ignoreRotation = false;
 
     private TextView subtitleDisplay;
     /**
@@ -204,6 +208,8 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return mURLType;
     }
 
+
+
     /**
      * return the current uri .
      * @return uri string . null if has not init by {@link #setVideoURI(Uri)}
@@ -214,7 +220,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
         return null;
     }
-    
+
     /**
      * 视频截图.
      * @return
@@ -426,6 +432,29 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         requestLayout();
         invalidate();
     }
+
+    /**
+     * 设置旋转角度.
+     * @param rotationDegree
+     */
+    public  void setVideoRotationDegree(int rotationDegree){
+        this.mVideoRotationDegree = rotationDegree;
+        if (mRenderView != null)
+            mRenderView.setVideoRotation(mVideoRotationDegree);
+    }
+
+    public boolean isIgnoreRotation() {
+        return ignoreRotation;
+    }
+
+    /**
+     * 忽略角度旋转.
+     * @param ignoreRotation
+     */
+    public void setIgnoreRotation(boolean ignoreRotation) {
+        this.ignoreRotation = ignoreRotation;
+    }
+
 
     // REMOVED: addSubtitleSource
     // REMOVED: mPendingSubtitleTracks
@@ -660,10 +689,12 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                             Log.d(TAG, "MEDIA_INFO_SUBTITLE_TIMED_OUT:");
                             break;
                         case IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                            mVideoRotationDegree = arg2;
                             Log.d(TAG, "MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + arg2);
-                            if (mRenderView != null)
-                                mRenderView.setVideoRotation(arg2);
+                            if(!ignoreRotation){
+                                mVideoRotationDegree = arg2;
+                                if (mRenderView != null)
+                                    mRenderView.setVideoRotation(arg2);
+                            }
                             break;
                         case IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
                             Log.d(TAG, "MEDIA_INFO_AUDIO_RENDERING_START:");

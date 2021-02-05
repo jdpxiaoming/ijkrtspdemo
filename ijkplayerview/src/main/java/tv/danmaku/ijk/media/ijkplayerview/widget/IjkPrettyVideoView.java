@@ -83,6 +83,29 @@ public class IjkPrettyVideoView extends FrameLayout
         }
     }
 
+
+    /**
+     * 设置旋转角度.
+     * @param rotationDegree
+     */
+    public  void setVideoRotationDegree(int rotationDegree){
+        if(null != mIjkVideoView) mIjkVideoView.setVideoRotationDegree(rotationDegree);
+    }
+
+    public boolean isIgnoreRotation() {
+        if(null != mIjkVideoView) return mIjkVideoView.isIgnoreRotation();
+        return false;
+    }
+
+    /**
+     * 忽略角度旋转.
+     * @param ignoreRotation
+     */
+    public void setIgnoreRotation(boolean ignoreRotation) {
+        if(null != mIjkVideoView)  mIjkVideoView.setIgnoreRotation(ignoreRotation);
+    }
+
+
     /**
      *  return the inner {@link IjkVideoView}
      * @return

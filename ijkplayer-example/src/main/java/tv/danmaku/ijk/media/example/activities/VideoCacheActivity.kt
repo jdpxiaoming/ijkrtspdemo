@@ -89,7 +89,7 @@ class VideoCacheActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/e2006602-d4a5-4865-8912-88dada618561.mp4"
+        mVideoPath = "http://ovopark.oss-cn-hangzhou.aliyuncs.com/video_video_1612540142579.mp4"
         val proxy = PApplication.getProxy(this)
         val proxyUrl = proxy.getProxyUrl(mVideoPath)
         // init player
@@ -100,7 +100,7 @@ class VideoCacheActivity : AppCompatActivity() {
         mMediaController = AndroidMediaController(this, false)
         mMediaController?.setSupportActionBar(actionBar)
 
-        mVideoView?.setMediaController(mMediaController)
+//        mVideoView?.setMediaController(mMediaController)
         mVideoView?.setOnInfoListener { mp, what, extra ->
             Log.e(TAG, "onInfo#position: " + mp.currentPosition + " what: " + what + " extra: " + extra)
             if (IjkMediaPlayer.MEDIA_ERROR_NO_STREAM == what) {
@@ -134,6 +134,9 @@ class VideoCacheActivity : AppCompatActivity() {
             }
         }
 
+        //设置视频旋转角度.
+        mVideoView?.isIgnoreRotation = false;
+        mVideoView?.setVideoRotationDegree(0)
         // prefer mVideoPath
         mVideoView?.setVideoPath(proxyUrl, IjkVideoView.IJK_TYPE_HTTP_PLAY)
     }
