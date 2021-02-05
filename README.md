@@ -4,8 +4,8 @@ ijkplayer open the rtsp &amp; h265 surpport android demo .
 # 0.0.22 打开iJkview 设置旋转角度
 ```java 
   //设置视频旋转角度. 
-        mVideoView?.isIgnoreRotation = false;
-        mVideoView?.setVideoRotationDegree(0)
+  mVideoView?.isIgnoreRotation = false;
+  mVideoView?.setVideoRotationDegree(0)
 ```
 
 # 0.0.21 关闭无效的vp_duration的log信息.
@@ -66,11 +66,11 @@ allprojects {
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.20'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.20'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.20'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.22'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.22'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.22'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.20'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.22'
 ```
 
 
