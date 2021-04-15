@@ -121,6 +121,7 @@ public interface IRenderView {
     public static final int IJK_TYPE_LIVING_LOW_DELAY = 2; //实时直播要求低延迟，不要求首开熟读 .
     public static final int IJK_TYPE_HTTP_PLAY = 3;//录播 mp4 /hls/flv...
     public static final int IJK_TYPE_FILE_PLAY = 10;//本地文件播放 .
+    public static final int IJK_TYPE_CUSTOMER_PLAY = 20;//用户自定义参数模式，需要先调用方法设置参数（setCustomerValue），否则使用ijk默认参数
     public static final int IJK_TYPE_PLAY_DEFAULT = IJK_TYPE_LIVING_WATCH;//默认播放类型.
 ```
 

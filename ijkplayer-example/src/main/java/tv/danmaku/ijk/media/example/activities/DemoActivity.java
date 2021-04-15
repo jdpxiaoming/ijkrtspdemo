@@ -55,6 +55,10 @@ public class DemoActivity extends AppCompatActivity {
         VideoCache2Activity.intentTo(this,"","video cache play with local proxy .");
     }
 
+    public void goCustomerVideo(View view) {
+        VideoCustomerActivity.intentTo(this,"","video cache play with local proxy .");
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

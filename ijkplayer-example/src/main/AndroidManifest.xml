@@ -88,6 +88,7 @@
         </activity>
         <activity android:name=".activities.VideoLayoutActivity">
         </activity>
+        <activity android:name=".activities.VideoCustomerActivity" />
     </application>
 
 </manifest>

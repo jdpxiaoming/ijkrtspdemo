@@ -69,6 +69,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     public static final int IJK_TYPE_LIVING_LOW_DELAY = 2; //实时直播要求低延迟，不要求首开熟读 .
     public static final int IJK_TYPE_HTTP_PLAY = 3;//录播 mp4 /hls/flv...
     public static final int IJK_TYPE_FILE_PLAY = 10;//本地文件播放 .
+    public static final int IJK_TYPE_CUSTOMER_PLAY = 20;//用户自定义参数模式，需要先调用方法设置参数（setCustomerValue），否则使用ijk默认参数
     public static final int IJK_TYPE_PLAY_DEFAULT = IJK_TYPE_LIVING_WATCH;//默认播放类型.
     // settable by the client
     private Uri mUri;
@@ -148,6 +149,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * 超时 毫秒. default 30*1000 ms .
      */
     private long mTimeOut = -1;
+
+    /**
+     * 自定义参数
+     */
+    private Map<String, Long> formatMap;
+    private Map<String, Long> codecMap;
+    private Map<String, Long> swsMap;
+    private Map<String, Long> playerMap;
+    private Map<String, String> formatStringMap;
 
     public IjkVideoView(Context context) {
         super(context);
@@ -1337,6 +1347,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                             //mp4+http点播.
                             makeHttpPlayerMP4(ijkMediaPlayer);
                             break;
+                        case IJK_TYPE_CUSTOMER_PLAY:
+                            //自定义参数
+                            makeCustomerPlayer(ijkMediaPlayer);
+                            break;
                         case IJK_TYPE_LIVING_WATCH: //直播监控.
                         default:{
                             //视频监控：首开速度快<500ms
@@ -1539,6 +1553,59 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,  "max_cached_duration", 300); //300
         //清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
+    }
+
+    /**
+     * 设置自定义参数
+     * @param formatMap OPT_CATEGORY_FORMAT 参数
+     * @param codecMap OPT_CATEGORY_CODEC 参数
+     * @param swsMap OPT_CATEGORY_SWS 参数
+     * @param playerMap OPT_CATEGORY_PLAYER 参数
+     * @param formatStringMap OPT_CATEGORY_FORMAT 字符串参数
+     */
+    public void setCustomerValue(Map<String,Long> formatMap,Map<String,Long> codecMap,Map<String,Long> swsMap,Map<String,Long> playerMap,Map<String,String> formatStringMap){
+        this.formatMap = formatMap;
+        this.codecMap = codecMap;
+        this.swsMap = swsMap;
+        this.playerMap = playerMap;
+        this.formatStringMap = formatStringMap;
+    }
+
+    /**
+     * 设置播放器自定义参数
+     * @param ijkMediaPlayer
+     */
+    private void makeCustomerPlayer(IjkMediaPlayer ijkMediaPlayer) {
+        if (formatMap != null && formatMap.size() > 0){
+            for(Map.Entry<String,Long> entry : formatMap.entrySet()){
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (codecMap != null && codecMap.size() > 0){
+            for(Map.Entry<String,Long> entry : codecMap.entrySet()){
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (swsMap != null && swsMap.size() > 0){
+            for(Map.Entry<String,Long> entry : swsMap.entrySet()){
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_SWS, entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (playerMap != null && playerMap.size() > 0){
+            for(Map.Entry<String,Long> entry : playerMap.entrySet()){
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (formatStringMap != null && formatStringMap.size() > 0){
+            for(Map.Entry<String,String> entry : formatStringMap.entrySet()){
+                ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, entry.getKey(), entry.getValue());
+            }
+        }
+
     }
 
     //-------------------------

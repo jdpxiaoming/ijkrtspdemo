@@ -31,4 +31,11 @@
         android:layout_height="wrap_content"
         android:onClick="goVideoCache2"
         android:text="Http边下边播2" />
+
+    <Button
+        android:id="@+id/customer_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goCustomerVideo"
+        android:text="自定义参数" />
 </LinearLayout>
