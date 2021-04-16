@@ -1,6 +1,11 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
 
+# 0.0.23 增加自定义参数选项. 
+```java
+mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
+```
+
 # 0.0.22 打开iJkview 设置旋转角度
 ```java 
   //设置视频旋转角度. 
@@ -66,11 +71,11 @@ allprojects {
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.22'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.22'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.22'
+    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.23'
+    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.23'
+    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.23'
     //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.22'
+    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.23'
 ```
 
 

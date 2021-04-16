@@ -85,8 +85,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = "http://113.31.102.114:5581/rtsp/3a1be6d7-0c59-48d6-a6a5-3fedbf22e521.flv";//东方广场店-H265 .
-        mVideoPath = "file:///storage/emulated/0/7561446b9d98faaaf634b918d412dd96.mp4";//东方广场店-H265 .
+        mVideoPath = "http://106.75.254.198:5581/rtsp/1c399fa1-6dda-453f-8574-43d6d29dc54d.flv";//东方广场店-H265 .
+//        mVideoPath = "http://106.75.254.198:5581/rtsp/7f706b5e-76bf-4d03-9c7e-1255ceac1f3c.flv";//4x倍速播放.
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -123,7 +123,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
 
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_FILE_PLAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_LOW_DELAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {
@@ -131,6 +131,9 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
             finish();
             return;
         }
+
+        //测试单视频倍速播放.
+        mVideoView.openZeroVideoDelay(true);
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
