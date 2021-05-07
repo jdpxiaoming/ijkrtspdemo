@@ -85,7 +85,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = "http://106.75.254.198:5581/rtsp/1c399fa1-6dda-453f-8574-43d6d29dc54d.flv";//东方广场店-H265 .
+        mVideoPath = "http://106.75.254.198:5581/rtsp/aa6f4676-32d1-4f3a-b262-73a43e489204.flv";//东方广场店-H265 .
 //        mVideoPath = "http://106.75.254.198:5581/rtsp/7f706b5e-76bf-4d03-9c7e-1255ceac1f3c.flv";//4x倍速播放.
 
         // init UI
@@ -133,7 +133,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         }
 
         //测试单视频倍速播放.
-        mVideoView.openZeroVideoDelay(true);
+//        mVideoView.openZeroVideoDelay(true);
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override

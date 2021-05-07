@@ -1,5 +1,7 @@
 # ijkrtspdemo
 ijkplayer open the rtsp &amp; h265 surpport android demo . 
+# 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
+
 
 # 0.0.23 增加自定义参数选项. 
 ```java
