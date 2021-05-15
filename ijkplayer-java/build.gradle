@@ -24,5 +24,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
-
-apply from: new File(rootProject.projectDir, "tools/gradle-bintray-upload.gradle");
+//新建一个任务，这里只需要定义名字，下面的配置文件中会自动获取相关配置信息.
+//uploadArchives {
+//
+//}
+apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");

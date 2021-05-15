@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 android {
     // http://tools.android.com/tech-docs/new-build-system/tips
     //noinspection GroovyAssignabilityCheck
@@ -25,4 +24,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
-apply from: new File(rootProject.projectDir, "tools/gradle-bintray-upload.gradle");
+uploadArchives {
+
+}
+apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");

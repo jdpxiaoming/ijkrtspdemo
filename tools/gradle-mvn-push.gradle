@@ -23,12 +23,12 @@ def isReleaseBuild() {
 
 def getReleaseRepositoryUrl() {
     return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 def getSnapshotRepositoryUrl() {
     return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+            : "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
 def getRepositoryUsername() {
@@ -84,6 +84,13 @@ afterEvaluate { project ->
                         }
                     }
                 }
+                pom.withXml {
+                    asNode().dependencies.'*'.each {
+                        if (it.scope.text() == 'test') {
+                            it.delete
+                        }
+                    }
+                }
             }
         }
     }
@@ -91,12 +98,12 @@ afterEvaluate { project ->
     android.libraryVariants.all { variant ->
         if(variant.buildType.name.equals("release")) {
             def jarTask = project.tasks.create(name: "jar${variant.name.capitalize()}", type: Jar) {
-                from variant.javaCompile.destinationDir
+                from variant.javaCompileProvider.get().destinationDir
                 exclude "**/R.class"
                 exclude "**/R\$**.class"
                 exclude "**/BuildConfig.class"
             }
-            jarTask.dependsOn variant.javaCompile
+            jarTask.dependsOn variant.javaCompileProvider
         }
     }
 
@@ -106,24 +113,54 @@ afterEvaluate { project ->
     }
 
     task androidJavadocs(type: Javadoc) {
-        failOnError false
+//        failOnError false
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
 
     task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
         classifier = 'javadoc'
+//        archiveClassifier.set('javadoc')
         from androidJavadocs.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
         classifier = 'sources'
+//        archiveClassifier.set('sources')
         from android.sourceSets.main.java.sourceFiles
+    }
+
+    allprojects {
+        tasks.withType(Javadoc) {
+            options {
+                encoding "UTF-8"
+                charSet 'UTF-8'
+                author true
+                version true
+                links "https://developer.android.google.cn/reference/"
+            }
+        }
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+    }
+
+    if (JavaVersion.current().isJava9Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addBooleanOption('html5', true)
+            }
+        }
     }
 
     artifacts {
         archives androidSourcesJar
         archives androidJavadocsJar
-        archives jarRelease
+//        archives jarRelease
     }
 }
