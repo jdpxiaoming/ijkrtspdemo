@@ -4,9 +4,9 @@ buildscript {
     ext.kotlin_version = '1.4.10'
     ext.anko_version = '0.10.5'
     repositories {
-        maven {
-            url 'http://172.16.22.18:8082/repository/maven-public/'
-        }
+//        maven {
+//            url 'http://172.16.22.18:8082/repository/maven-public/'
+//        }
         maven { url "https://maven.google.com" }
         google()
         jcenter()
@@ -24,13 +24,14 @@ buildscript {
 
 allprojects {
     repositories {
+        //新发布的应用10分钟可以同步到repo1,maven central 需要2个小时.
         maven {
-            url 'http://172.16.22.18:8082/repository/maven-public/'
+            url 'https://repo1.maven.org/maven2/'
         }
         maven { url "https://maven.google.com" }
-        maven {
-            url "https://dl.bintray.com/media/maven"
-        }
+//        maven {
+//            url "https://dl.bintray.com/media/maven"
+//        }
         google()
         jcenter()
     }
