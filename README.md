@@ -3,7 +3,7 @@ ijkplayer open the rtsp &amp; h265 surpport android demo .
 # 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
 - 从jcenter更换到Google Maven Central
 ```groovy
-    implementation 'io.github.jdpxiaoming:ijkplayerview:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
     implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
     implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
     //看情况如果需要64位so则引入.
