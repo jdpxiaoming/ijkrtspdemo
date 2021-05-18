@@ -4,7 +4,7 @@ ijkplayer open the rtsp &amp; h265 surpport android demo .
 # 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
 - 从jcenter更换到Google Maven Central
 ```groovy
-    implementation 'io.github.jdpxiaoming:ijkplayerview:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
     implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
     implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
     //看情况如果需要64位so则引入.
@@ -99,22 +99,26 @@ IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
 ```
 
 ### 设置View的填充模式
+
 ```java
 mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
 ```
 
 ### Rtsp超时.
+
 ```java
 //超时单位微妙.2s = 2*1000*1000 
 mVideoView.setTimeout(2*1000*1000);
 ```
 
 ### 设置渲染View为`surrfaceView`默认：`TexutureView`
+
 ```java
  mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
 ```
 
 ### 视图拉伸模式
+
 ```java
 //拉伸满屏.
  mIjkVideoView.setAspectRatio(IRenderView.AR_MATCH_PARENT);
@@ -132,6 +136,7 @@ public interface IRenderView {
 ``` 
 
 ### 根据播放地址类型设置不同的类型 .
+
 ```java
     public static final int IJK_TYPE_LIVING_WATCH = 1; //实时监控，要求首开速度,延迟略高一点
     public static final int IJK_TYPE_LIVING_LOW_DELAY = 2; //实时直播要求低延迟，不要求首开熟读 .
@@ -142,6 +147,7 @@ public interface IRenderView {
 ```
 
 - example 点播
+- 
 ```java
  mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
 ```
@@ -149,6 +155,8 @@ public interface IRenderView {
 ### 实现Mp4文件边下边播放
 - 引入下载代理库 : `implementation 'com.danikula:videocache:2.7.1'`
 - 定义Application. 
+
+
 ```java 
 /**
  * comment:
@@ -171,7 +179,10 @@ public class PApplication extends Application {
     }
 }
 ```
+
 - 处理播放url
+
+
 ```java
 mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
 HttpProxyCacheServer proxy = PApplication.getProxy(this);
@@ -203,6 +214,8 @@ export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --enable-protocol=tcp"
 
 # rtsp首开速度优化 
 >配置1. 速度首开50
+
+
 ```配置1. 速度首开50
 IJKMEDIA: ===== options =====
 IJKMEDIA: player-opts : opensles                     = 1
@@ -229,7 +242,10 @@ IJKMEDIA: format-opts : flush_packets                = 1
 IJKMEDIA: codec-opts  : skip_loop_filter             = 48
 IJKMEDIA: ===================
 ```
+
 >配置2. 首开速度20左右
+
+
 ```
 ===== options =====
 SDL_RunThread: [30113] ff_msg_loop
