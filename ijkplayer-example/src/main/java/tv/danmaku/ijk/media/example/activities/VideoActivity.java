@@ -85,7 +85,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = "http://116.63.182.199:5581/rtsp/1948533d-dd62-40db-9190-d9d6129ea0ab.flv";//东方广场店-H265 .
+        mVideoPath = "rtsp://113.31.102.114:5555/rtsp/72d2e10a-fa2c-4fcc-9e47-a809d8ef61b4";//东方广场店-H265 .
 //        mVideoPath = "http://106.75.254.198:5581/rtsp/7f706b5e-76bf-4d03-9c7e-1255ceac1f3c.flv";//4x倍速播放.
 
         // init UI
@@ -113,13 +113,13 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //设置h265
-//        if(mVideoPath.startsWith("rtsp")){
-//            mVideoView.setH265(true);
-//            mVideoView.openZeroVideoDelay(false);
-//        }else{
-//            //打开视频0延迟.
-//            mVideoView.openZeroVideoDelay(true);
-//        }
+        if(mVideoPath.startsWith("rtsp")){
+            mVideoView.setH265(true);
+            mVideoView.openZeroVideoDelay(false);
+        }else{
+            //打开视频0延迟.
+            mVideoView.openZeroVideoDelay(true);
+        }
 
         // prefer mVideoPath
         if (mVideoPath != null)
