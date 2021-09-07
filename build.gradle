@@ -7,7 +7,7 @@ buildscript {
 //        maven {
 //            url 'http://172.16.22.18:8082/repository/maven-public/'
 //        }
-        maven { url "https://maven.google.com" }
+//        maven { url "https://maven.google.com" }
         google()
         jcenter()
     }
@@ -25,14 +25,12 @@ buildscript {
 allprojects {
     repositories {
         //新发布的应用10分钟可以同步到repo1,maven central 需要2个小时.
-        maven {
-            url 'https://repo1.maven.org/maven2/'
-        }
+        maven { url 'https://repo1.maven.org/maven2/'}
+        google()
         maven { url "https://maven.google.com" }
 //        maven {
 //            url "https://dl.bintray.com/media/maven"
 //        }
-        google()
         jcenter()
     }
 }

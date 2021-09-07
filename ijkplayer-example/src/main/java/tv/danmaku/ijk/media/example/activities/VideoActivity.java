@@ -54,7 +54,6 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private static final String TAG = "VideoActivity";
 
     private String mVideoPath ;
-    private Uri    mVideoUri;
 
     private AndroidMediaController mMediaController;
     private IjkVideoView mVideoView;
@@ -85,7 +84,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = "rtsp://113.31.102.114:5555/rtsp/72d2e10a-fa2c-4fcc-9e47-a809d8ef61b4";//东方广场店-H265 .
+        mVideoPath = "http://106.75.254.198:5581/rtsp/f9e421e6-2380-40de-9f83-eba7b285b69c.flv";//东方广场店-H265 .
+        mVideoPath = "http://cloud-ehome.21cn.com/oos/pro/e26af992b69fff429b8c9e18a8453fd8";//
 //        mVideoPath = "http://106.75.254.198:5581/rtsp/7f706b5e-76bf-4d03-9c7e-1255ceac1f3c.flv";//4x倍速播放.
 
         // init UI
@@ -118,14 +118,12 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
             mVideoView.openZeroVideoDelay(false);
         }else{
             //打开视频0延迟.
-            mVideoView.openZeroVideoDelay(true);
+//            mVideoView.openZeroVideoDelay(true);
         }
 
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-        else if (mVideoUri != null)
-            mVideoView.setVideoURI(mVideoUri);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
         else {
             Log.e(TAG, "Null Data Source\n");
             finish();
@@ -145,6 +143,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
                     // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
                 }
                 return false;
+
             }
         });
 
