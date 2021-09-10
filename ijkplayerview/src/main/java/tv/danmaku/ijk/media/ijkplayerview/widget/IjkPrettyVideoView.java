@@ -267,6 +267,21 @@ public class IjkPrettyVideoView extends FrameLayout
         }
     }
 
+    boolean isAutoLoading = false;//自动加载
+
+
+    public boolean isAutoLoading() {
+        return isAutoLoading;
+    }
+
+    /**
+     * 遇到错误是否自动重新加载重试.
+     * @param autoLoading true:自动重新加载 default:false.
+     */
+    public void setAutoLoading(boolean autoLoading) {
+        isAutoLoading = autoLoading;
+    }
+
     @Override
     public boolean onError(IMediaPlayer mp, int what, int extra) {
         Log.i(TAG," onError # " +what+" msg: "+extra);
@@ -280,6 +295,15 @@ public class IjkPrettyVideoView extends FrameLayout
                     mHintTv.setTextColor(mRetryColor);
                     mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
                     mHintTv.setVisibility(VISIBLE);
+
+                    if(isAutoLoading){
+                        postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mHintTv.performClick();
+                            }
+                        },2*1000);
+                    }
                 }
             });
         }

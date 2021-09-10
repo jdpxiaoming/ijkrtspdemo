@@ -59,6 +59,11 @@ public class DemoActivity extends AppCompatActivity {
         VideoCustomerActivity.intentTo(this,"","video cache play with local proxy .");
     }
 
+    public void goVideoSplit4(View view) {
+        VideoSplit4Activity.intentTo(this,"","video splite4screen play .");
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

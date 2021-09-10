@@ -89,6 +89,7 @@
         <activity android:name=".activities.VideoLayoutActivity">
         </activity>
         <activity android:name=".activities.VideoCustomerActivity" />
+        <activity android:name=".activities.VideoSplit4Activity" />
     </application>
 
 </manifest>

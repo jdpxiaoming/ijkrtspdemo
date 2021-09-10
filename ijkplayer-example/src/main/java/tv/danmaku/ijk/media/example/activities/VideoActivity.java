@@ -84,9 +84,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = "http://106.75.254.198:5581/rtsp/f9e421e6-2380-40de-9f83-eba7b285b69c.flv";//东方广场店-H265 .
-        mVideoPath = "http://cloud-ehome.21cn.com/oos/pro/e26af992b69fff429b8c9e18a8453fd8";//
-//        mVideoPath = "http://106.75.254.198:5581/rtsp/7f706b5e-76bf-4d03-9c7e-1255ceac1f3c.flv";//4x倍速播放.
+        mVideoPath = "http://106.75.254.198:5581/rtsp/ce1a3846-38b5-453f-929d-2921dfedc38d.flv";
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
