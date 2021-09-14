@@ -101,8 +101,8 @@ public class VideoSplit4Activity extends AppCompatActivity {
 
 
         // handle arguments
-        mVideoPath =  "http://106.75.210.197:5581/rtsp/37a33f72-3f21-4f27-9f8b-4e12bb1aa072.flv";
-        mVideoPath2 = "http://106.75.210.197:5581/rtsp/5e88c97d-9dfb-4cb9-8cab-a3c581a4b432.flv";
+        mVideoPath =  "http://202.umbrellary.com:1000/4K_2.mp4";
+        mVideoPath2 = "http://202.umbrellary.com:1000/4K_2.mp4";
         mVideoPath3 = "http://106.75.210.197:5581/rtsp/aca6be36-a0d6-4694-855a-be600be6b198.flv";
         mVideoPath4 = "http://106.75.210.197:5581/rtsp/eff21ca3-79c1-4379-b434-f9c3884c7d44.flv";
 
@@ -115,10 +115,10 @@ public class VideoSplit4Activity extends AppCompatActivity {
         mMediaController.setSupportActionBar(actionBar);
 
         //auto loading video .
-        mVideoView.setAutoLoading(true);
-        mVideoView2.setAutoLoading(true);
-        mVideoView3.setAutoLoading(true);
-        mVideoView4.setAutoLoading(true);
+//        mVideoView.setAutoLoading(true);
+//        mVideoView2.setAutoLoading(true);
+//        mVideoView3.setAutoLoading(true);
+//        mVideoView4.setAutoLoading(true);
 
         //使用Exo-播放器.
 //        mVideoView.set
@@ -133,11 +133,11 @@ public class VideoSplit4Activity extends AppCompatActivity {
             mVideoView2.setVideoPath(mVideoPath2, IjkVideoView.IJK_TYPE_LIVING_WATCH);
             mVideoView2.start();
 
-            mVideoView3.setVideoPath(mVideoPath3, IjkVideoView.IJK_TYPE_LIVING_WATCH);
+           /* mVideoView3.setVideoPath(mVideoPath3, IjkVideoView.IJK_TYPE_LIVING_WATCH);
             mVideoView3.start();
 
             mVideoView4.setVideoPath(mVideoPath4, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-            mVideoView4.start();
+            mVideoView4.start();*/
         }
     }
 

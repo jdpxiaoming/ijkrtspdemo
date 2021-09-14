@@ -98,8 +98,8 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
 
 
         // handle arguments
-        mVideoPath =  "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
-        mVideoPath2 = "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
+        mVideoPath =  "http://202.umbrellary.com:1000/4K_1.mp4";
+        mVideoPath2 = "http://202.umbrellary.com:1000/4K_2.mp4";
         mVideoPath3 = "http://106.75.254.198:5581/rtsp/fdd98321-00f3-472d-bbfa-4d8841b557f8.flv";
         mVideoPath4 = "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
         mVideoPath5 = "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
@@ -150,25 +150,25 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
 
         player.setMediaItem(mediaItem);
         player2.setMediaItem(mediaItem2);
-        player3.setMediaItem(mediaItem3);
-        player4.setMediaItem(mediaItem4);
-        player5.setMediaItem(mediaItem5);
-        player6.setMediaItem(mediaItem6);
+//        player3.setMediaItem(mediaItem3);
+//        player4.setMediaItem(mediaItem4);
+//        player5.setMediaItem(mediaItem5);
+//        player6.setMediaItem(mediaItem6);
 
         player.prepare();
         player2.prepare();
-        player3.prepare();
-        player4.prepare();
-        player5.prepare();
-        player6.prepare();
+//        player3.prepare();
+//        player4.prepare();
+//        player5.prepare();
+//        player6.prepare();
 
 
         player.play();
         player2.play();
-        player3.play();
-        player4.play();
-        player5.play();
-        player6.play();
+//        player3.play();
+//        player4.play();
+//        player5.play();
+//        player6.play();
     }
 
     @Override

@@ -91,7 +91,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkExoMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "http://106.75.210.197:5581/rtsp/37a33f72-3f21-4f27-9f8b-4e12bb1aa072.flv";
+        mVideoPath = "http://106.75.210.197:5581/rtsp/03de5042-87e7-4853-b659-98dbf012dc1e.flv";
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,7 +115,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
-        mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
+//        mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //设置h265
         if(mVideoPath.startsWith("rtsp")){

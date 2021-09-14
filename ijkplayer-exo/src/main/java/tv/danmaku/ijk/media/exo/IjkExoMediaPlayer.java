@@ -40,6 +40,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
@@ -52,6 +53,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
@@ -64,8 +66,6 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.MediaInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
-import static android.content.ContentValues.TAG;
-
 public class IjkExoMediaPlayer extends AbstractMediaPlayer {
     public static final String TAG = "IjkExoMediaPlayer";
 
@@ -76,6 +76,7 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
     private int mVideoHeight;
     private Surface mSurface;
     private MediaSource mediaSource;
+    private MediaItem mediaItem;
 
     public IjkExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
@@ -101,9 +102,12 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
 
     @Override
     public void setDataSource(Context context, Uri uri) {
+        Log.i(TAG,"setDataSource create url mediaItem:"+uri.toString());
         mDataSource = uri.toString();
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        this.mediaSource = getMediaSource(uri, bandwidthMeter);
+//        this.mediaSource = getMediaSource(uri, bandwidthMeter);
+        mediaItem = MediaItem.fromUri(uri);
+//        mediaSource = mediaItem.
     }
 
     @Override
@@ -134,6 +138,8 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
             throw new IllegalStateException("can't prepare a prepared player");
         }
 
+        Log.i(TAG,"prepareAsync ready to play set data source and prepare()");
+
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
 
@@ -146,7 +152,8 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
             mInternalPlayer.setVideoSurface(mSurface);
         }
 
-        mInternalPlayer.setMediaSource(mediaSource);
+//        mInternalPlayer.setMediaSource(mediaSource);
+        mInternalPlayer.setMediaItem(mediaItem);
         mInternalPlayer.prepare();
         mInternalPlayer.setPlayWhenReady(false);
     }
@@ -433,7 +440,7 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
         HttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, bandwidthMeter, 5000, 5000, true);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this.mAppContext, bandwidthMeter, httpDataSourceFactory);
         MediaSource mediaSource;
-
+        MediaItem mediaItem = MediaItem.fromUri(uri);
         int type = Util.inferContentType(uri);
         Log.i(TAG,"video type is :"+type);
         switch (type) {
@@ -458,10 +465,47 @@ public class IjkExoMediaPlayer extends AbstractMediaPlayer {
             default:
 //                ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 //                mediaSource = new ExtractorMediaSource(MediaItem.fromUri(uri), dataSourceFactory, extractorsFactory, mainHandler, null);
+                Log.i(TAG,"default create dashMediaSource!~");
                 mediaSource = new DashMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uri));
                 break;
         }
 
         return mediaSource;
+    }
+
+
+    private DataSource.Factory getHttpDataSourceFactory(Context context, boolean preview, String uerAgent) {
+        if (uerAgent == null) {
+            uerAgent = Util.getUserAgent(context, TAG);
+        }
+        int connectTimeout = DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS;
+        int readTimeout = DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS;
+//        if (sHttpConnectTimeout > 0) {
+//            connectTimeout = sHttpConnectTimeout;
+//        }
+//        if (sHttpReadTimeout > 0) {
+//            readTimeout = sHttpReadTimeout;
+//        }
+        boolean allowCrossProtocolRedirects = false;
+//        if (mMapHeadData != null && mMapHeadData.size() > 0) {
+//            allowCrossProtocolRedirects = "true".equals(mMapHeadData.get("allowCrossProtocolRedirects"));
+//        }
+        DataSource.Factory dataSourceFactory = null;
+//        if (sExoMediaSourceInterceptListener != null) {
+//            dataSourceFactory = sExoMediaSourceInterceptListener.getHttpDataSourceFactory(uerAgent, preview ? null : new DefaultBandwidthMeter.Builder(mAppContext).build(),
+//                    connectTimeout,
+//                    readTimeout, mMapHeadData, allowCrossProtocolRedirects);
+//        }
+        if (dataSourceFactory == null) {
+            dataSourceFactory = new DefaultHttpDataSource.Factory()
+                    .setAllowCrossProtocolRedirects(allowCrossProtocolRedirects)
+                    .setConnectTimeoutMs(connectTimeout)
+                    .setReadTimeoutMs(readTimeout)
+                    .setTransferListener(preview ? null : new DefaultBandwidthMeter.Builder(mAppContext).build());
+//            if (mMapHeadData != null && mMapHeadData.size() > 0) {
+//                ((DefaultHttpDataSource.Factory) dataSourceFactory).setDefaultRequestProperties(mMapHeadData);
+//            }
+        }
+        return dataSourceFactory;
     }
 }
