@@ -19,33 +19,33 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.os.Handler;
-import com.google.android.exoplayer.DefaultLoadControl;
-import com.google.android.exoplayer.LoadControl;
-import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
-import com.google.android.exoplayer.MediaCodecSelector;
-import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
-import com.google.android.exoplayer.SampleSource;
-import com.google.android.exoplayer.TrackRenderer;
-import com.google.android.exoplayer.audio.AudioCapabilities;
+//import com.google.android.exoplayer.DefaultLoadControl;
+//import com.google.android.exoplayer.LoadControl;
+//import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
+//import com.google.android.exoplayer.MediaCodecSelector;
+//import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
+//import com.google.android.exoplayer.SampleSource;
+//import com.google.android.exoplayer.TrackRenderer;
+//import com.google.android.exoplayer.audio.AudioCapabilities;
 import tv.danmaku.ijk.media.exo.demo.player.DemoPlayer.RendererBuilder;
-import com.google.android.exoplayer.hls.DefaultHlsTrackSelector;
-import com.google.android.exoplayer.hls.HlsChunkSource;
-import com.google.android.exoplayer.hls.HlsMasterPlaylist;
-import com.google.android.exoplayer.hls.HlsPlaylist;
-import com.google.android.exoplayer.hls.HlsPlaylistParser;
-import com.google.android.exoplayer.hls.HlsSampleSource;
-import com.google.android.exoplayer.hls.PtsTimestampAdjusterProvider;
-import com.google.android.exoplayer.metadata.MetadataTrackRenderer;
-import com.google.android.exoplayer.metadata.id3.Id3Frame;
-import com.google.android.exoplayer.metadata.id3.Id3Parser;
-import com.google.android.exoplayer.text.TextTrackRenderer;
-import com.google.android.exoplayer.text.eia608.Eia608TrackRenderer;
-import com.google.android.exoplayer.upstream.DataSource;
-import com.google.android.exoplayer.upstream.DefaultAllocator;
-import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer.upstream.DefaultUriDataSource;
-import com.google.android.exoplayer.util.ManifestFetcher;
-import com.google.android.exoplayer.util.ManifestFetcher.ManifestCallback;
+//import com.google.android.exoplayer.hls.DefaultHlsTrackSelector;
+//import com.google.android.exoplayer.hls.HlsChunkSource;
+//import com.google.android.exoplayer.hls.HlsMasterPlaylist;
+//import com.google.android.exoplayer.hls.HlsPlaylist;
+//import com.google.android.exoplayer.hls.HlsPlaylistParser;
+//import com.google.android.exoplayer.hls.HlsSampleSource;
+//import com.google.android.exoplayer.hls.PtsTimestampAdjusterProvider;
+//import com.google.android.exoplayer.metadata.MetadataTrackRenderer;
+//import com.google.android.exoplayer.metadata.id3.Id3Frame;
+//import com.google.android.exoplayer.metadata.id3.Id3Parser;
+//import com.google.android.exoplayer.text.TextTrackRenderer;
+//import com.google.android.exoplayer.text.eia608.Eia608TrackRenderer;
+//import com.google.android.exoplayer.upstream.DataSource;
+//import com.google.android.exoplayer.upstream.DefaultAllocator;
+//import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
+//import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+//import com.google.android.exoplayer.util.ManifestFetcher;
+//import com.google.android.exoplayer.util.ManifestFetcher.ManifestCallback;
 import java.io.IOException;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class HlsRendererBuilder implements RendererBuilder {
   private final String userAgent;
   private final String url;
 
-  private AsyncRendererBuilder currentAsyncBuilder;
+//  private AsyncRendererBuilder currentAsyncBuilder;
 
   public HlsRendererBuilder(Context context, String userAgent, String url) {
     this.context = context;
@@ -73,19 +73,19 @@ public class HlsRendererBuilder implements RendererBuilder {
 
   @Override
   public void buildRenderers(DemoPlayer player) {
-    currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, player);
-    currentAsyncBuilder.init();
+    /*currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, player);
+    currentAsyncBuilder.init();*/
   }
 
   @Override
   public void cancel() {
-    if (currentAsyncBuilder != null) {
+   /* if (currentAsyncBuilder != null) {
       currentAsyncBuilder.cancel();
       currentAsyncBuilder = null;
-    }
+    }*/
   }
 
-  private static final class AsyncRendererBuilder implements ManifestCallback<HlsPlaylist> {
+  /*private static final class AsyncRendererBuilder implements ManifestCallback<HlsPlaylist> {
 
     private final Context context;
     private final String userAgent;
@@ -141,7 +141,7 @@ public class HlsRendererBuilder implements RendererBuilder {
 
       // Build the video/id3 renderers.
       DataSource dataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
-      HlsChunkSource chunkSource = new HlsChunkSource(true /* isMaster */, dataSource, manifest,
+      HlsChunkSource chunkSource = new HlsChunkSource(true *//* isMaster *//*, dataSource, manifest,
           DefaultHlsTrackSelector.newDefaultInstance(context), bandwidthMeter,
           timestampAdjusterProvider);
       HlsSampleSource sampleSource = new HlsSampleSource(chunkSource, loadControl,
@@ -156,7 +156,7 @@ public class HlsRendererBuilder implements RendererBuilder {
       MediaCodecAudioTrackRenderer audioRenderer;
       if (haveAudios) {
         DataSource audioDataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
-        HlsChunkSource audioChunkSource = new HlsChunkSource(false /* isMaster */, audioDataSource,
+        HlsChunkSource audioChunkSource = new HlsChunkSource(false *//* isMaster *//*, audioDataSource,
             manifest, DefaultHlsTrackSelector.newAudioInstance(), bandwidthMeter,
             timestampAdjusterProvider);
         HlsSampleSource audioSampleSource = new HlsSampleSource(audioChunkSource, loadControl,
@@ -176,7 +176,7 @@ public class HlsRendererBuilder implements RendererBuilder {
       TrackRenderer textRenderer;
       if (haveSubtitles) {
         DataSource textDataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
-        HlsChunkSource textChunkSource = new HlsChunkSource(false /* isMaster */, textDataSource,
+        HlsChunkSource textChunkSource = new HlsChunkSource(false *//* isMaster *//*, textDataSource,
             manifest, DefaultHlsTrackSelector.newSubtitleInstance(), bandwidthMeter,
             timestampAdjusterProvider);
         HlsSampleSource textSampleSource = new HlsSampleSource(textChunkSource, loadControl,
@@ -194,6 +194,6 @@ public class HlsRendererBuilder implements RendererBuilder {
       player.onRenderers(renderers, bandwidthMeter);
     }
 
-  }
+  }*/
 
 }

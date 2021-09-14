@@ -18,10 +18,12 @@ package tv.danmaku.ijk.media.example.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,6 +66,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private Settings mSettings;
     private boolean mBackPressed;
     private long mLastStartTime = 0;
+    private SharedPreferences mSharedPreferences;
 
     public static Intent newIntent(Context context, String videoPath, String videoTitle) {
         Intent intent = new Intent(context, VideoActivity.class);
@@ -82,9 +85,13 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         setContentView(R.layout.activity_player);
 
         mSettings = new Settings(this);
+        //设置启用exoPlayer.
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String key = this.getString(tv.danmaku.ijk.media.ijkplayerview.R.string.pref_key_player);
+        mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkExoMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "http://106.75.254.198:5581/rtsp/ce1a3846-38b5-453f-929d-2921dfedc38d.flv";
+        mVideoPath = "http://106.75.210.197:5581/rtsp/37a33f72-3f21-4f27-9f8b-4e12bb1aa072.flv";
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

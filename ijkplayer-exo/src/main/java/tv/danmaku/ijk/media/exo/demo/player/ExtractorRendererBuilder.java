@@ -20,20 +20,25 @@ import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.net.Uri;
 import android.os.Handler;
-import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
-import com.google.android.exoplayer.MediaCodecSelector;
-import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
-import com.google.android.exoplayer.TrackRenderer;
-import com.google.android.exoplayer.audio.AudioCapabilities;
+//import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
+//import com.google.android.exoplayer.MediaCodecSelector;
+//import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
+//import com.google.android.exoplayer.TrackRenderer;
+//import com.google.android.exoplayer.audio.AudioCapabilities;
+import com.google.android.exoplayer2.upstream.Allocator;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+
 import tv.danmaku.ijk.media.exo.demo.player.DemoPlayer.RendererBuilder;
-import com.google.android.exoplayer.extractor.Extractor;
-import com.google.android.exoplayer.extractor.ExtractorSampleSource;
-import com.google.android.exoplayer.text.TextTrackRenderer;
-import com.google.android.exoplayer.upstream.Allocator;
-import com.google.android.exoplayer.upstream.DataSource;
-import com.google.android.exoplayer.upstream.DefaultAllocator;
-import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+//import com.google.android.exoplayer.extractor.Extractor;
+//import com.google.android.exoplayer.extractor.ExtractorSampleSource;
+//import com.google.android.exoplayer.text.TextTrackRenderer;
+//import com.google.android.exoplayer.upstream.Allocator;
+//import com.google.android.exoplayer.upstream.DataSource;
+//import com.google.android.exoplayer.upstream.DefaultAllocator;
+//import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
+//import com.google.android.exoplayer.upstream.DefaultUriDataSource;
 
 /**
  * A {link RendererBuilder} for streams that can be read using an {link Extractor}.
@@ -55,11 +60,11 @@ public class ExtractorRendererBuilder implements RendererBuilder {
 
   @Override
   public void buildRenderers(DemoPlayer player) {
-    Allocator allocator = new DefaultAllocator(BUFFER_SEGMENT_SIZE);
+    Allocator allocator = new DefaultAllocator(true,BUFFER_SEGMENT_SIZE);
     Handler mainHandler = player.getMainHandler();
 
     // Build the video and audio renderers.
-    DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(mainHandler, null);
+   /* DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();//mainHandler, null
     DataSource dataSource = new DefaultUriDataSource(context, bandwidthMeter, userAgent);
     ExtractorSampleSource sampleSource = new ExtractorSampleSource(uri, dataSource, allocator,
         BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE, mainHandler, player, 0);
@@ -77,7 +82,7 @@ public class ExtractorRendererBuilder implements RendererBuilder {
     renderers[DemoPlayer.TYPE_VIDEO] = videoRenderer;
     renderers[DemoPlayer.TYPE_AUDIO] = audioRenderer;
     renderers[DemoPlayer.TYPE_TEXT] = textRenderer;
-    player.onRenderers(renderers, bandwidthMeter);
+    player.onRenderers(renderers, bandwidthMeter);*/
   }
 
   @Override

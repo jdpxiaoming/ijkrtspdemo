@@ -18,13 +18,17 @@ package tv.danmaku.ijk.media.exo.demo;
 import android.media.MediaCodec.CryptoException;
 import android.os.SystemClock;
 import android.util.Log;
-import com.google.android.exoplayer.ExoPlayer;
-import com.google.android.exoplayer.MediaCodecTrackRenderer.DecoderInitializationException;
-import com.google.android.exoplayer.TimeRange;
-import com.google.android.exoplayer.audio.AudioTrack;
-import com.google.android.exoplayer.chunk.Format;
+//import com.google.android.exoplayer.ExoPlayer;
+//import com.google.android.exoplayer.MediaCodecTrackRenderer.DecoderInitializationException;
+//import com.google.android.exoplayer.TimeRange;
+//import com.google.android.exoplayer.audio.AudioTrack;
+//import com.google.android.exoplayer.chunk.Format;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
+
 import tv.danmaku.ijk.media.exo.demo.player.DemoPlayer;
-import com.google.android.exoplayer.util.VerboseLogUtil;
+//import com.google.android.exoplayer.util.VerboseLogUtil;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -97,20 +101,20 @@ public class EventLogger implements DemoPlayer.Listener, DemoPlayer.InfoListener
   public void onLoadStarted(int sourceId, long length, int type, int trigger, Format format,
       long mediaStartTimeMs, long mediaEndTimeMs) {
     loadStartTimeMs[sourceId] = SystemClock.elapsedRealtime();
-    if (VerboseLogUtil.isTagEnabled(TAG)) {
+//    if (VerboseLogUtil.isTagEnabled(TAG)) {
       Log.v(TAG, "loadStart [" + getSessionTimeString() + ", " + sourceId + ", " + type
           + ", " + mediaStartTimeMs + ", " + mediaEndTimeMs + "]");
-    }
+//    }
   }
 
   @Override
   public void onLoadCompleted(int sourceId, long bytesLoaded, int type, int trigger, Format format,
        long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs) {
-    if (VerboseLogUtil.isTagEnabled(TAG)) {
+//    if (VerboseLogUtil.isTagEnabled(TAG)) {
       long downloadTime = SystemClock.elapsedRealtime() - loadStartTimeMs[sourceId];
       Log.v(TAG, "loadEnd [" + getSessionTimeString() + ", " + sourceId + ", " + downloadTime
           + "]");
-    }
+//    }
   }
 
   @Override
@@ -142,12 +146,12 @@ public class EventLogger implements DemoPlayer.Listener, DemoPlayer.InfoListener
     printInternalError("drmSessionManagerError", e);
   }
 
-  @Override
-  public void onDecoderInitializationError(DecoderInitializationException e) {
+//  @Override
+  public void onDecoderInitializationError(MediaCodecRenderer.DecoderInitializationException e) {
     printInternalError("decoderInitializationError", e);
   }
 
-  @Override
+/*  @Override
   public void onAudioTrackInitializationError(AudioTrack.InitializationException e) {
     printInternalError("audioTrackInitializationError", e);
   }
@@ -155,7 +159,7 @@ public class EventLogger implements DemoPlayer.Listener, DemoPlayer.InfoListener
   @Override
   public void onAudioTrackWriteError(AudioTrack.WriteException e) {
     printInternalError("audioTrackWriteError", e);
-  }
+  }*/
 
   @Override
   public void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs) {
@@ -174,12 +178,12 @@ public class EventLogger implements DemoPlayer.Listener, DemoPlayer.InfoListener
     Log.d(TAG, "decoderInitialized [" + getSessionTimeString() + ", " + decoderName + "]");
   }
 
-  @Override
+ /* @Override
   public void onAvailableRangeChanged(int sourceId, TimeRange availableRange) {
     availableRangeValuesUs = availableRange.getCurrentBoundsUs(availableRangeValuesUs);
     Log.d(TAG, "availableRange [" + availableRange.isStatic() + ", " + availableRangeValuesUs[0]
         + ", " + availableRangeValuesUs[1] + "]");
-  }
+  }*/
 
   private void printInternalError(String type, Exception e) {
     Log.e(TAG, "internalError [" + getSessionTimeString() + ", " + type + "]", e);
@@ -193,8 +197,8 @@ public class EventLogger implements DemoPlayer.Listener, DemoPlayer.InfoListener
         return "E";
       case ExoPlayer.STATE_IDLE:
         return "I";
-      case ExoPlayer.STATE_PREPARING:
-        return "P";
+//      case ExoPlayer.STATE_PREPARING:
+//        return "P";
       case ExoPlayer.STATE_READY:
         return "R";
       default:

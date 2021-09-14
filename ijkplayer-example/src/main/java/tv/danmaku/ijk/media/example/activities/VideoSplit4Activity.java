@@ -18,9 +18,11 @@ package tv.danmaku.ijk.media.example.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -30,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
+import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.ijkplayerview.widget.IjkPrettyVideoView;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
@@ -48,6 +51,7 @@ public class VideoSplit4Activity extends AppCompatActivity {
 
     private AndroidMediaController mMediaController;
     private IjkPrettyVideoView mVideoView,mVideoView2,mVideoView3,mVideoView4;
+    private SharedPreferences mSharedPreferences;
 
     public static Intent newIntent(Context context, String videoPath, String videoTitle) {
         Intent intent = new Intent(context, VideoSplit4Activity.class);
@@ -67,6 +71,11 @@ public class VideoSplit4Activity extends AppCompatActivity {
 
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+
+        //设置启用exoPlayer.
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String key = this.getString(tv.danmaku.ijk.media.ijkplayerview.R.string.pref_key_player);
+        mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkExoMediaPlayer)).apply();
 
         // init player
         mVideoView = (IjkPrettyVideoView) findViewById(R.id.video_view);
@@ -90,12 +99,12 @@ public class VideoSplit4Activity extends AppCompatActivity {
         mVideoView4.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         mVideoView4.setTimeout(2*1000*1000);
 
-        // handle arguments
-        mVideoPath =  "http://106.75.254.198:5581/rtsp/e1fc09ed-b739-40db-83c7-bf37467541db.flv";
-        mVideoPath2 = "http://113.31.119.60:5581/rtsp/dc7bb0a9-c682-4f04-8b5d-9247e95ac978.flv";
-        mVideoPath3 = "http://106.75.210.197:5581/rtsp/cc468c64-4c7d-4642-90fc-40c539ef1692.flv";
-        mVideoPath4 = "http://106.75.210.197:5581/rtsp/cb45264f-acdc-49aa-bc45-789db1241af3.flv";
 
+        // handle arguments
+        mVideoPath =  "http://106.75.210.197:5581/rtsp/37a33f72-3f21-4f27-9f8b-4e12bb1aa072.flv";
+        mVideoPath2 = "http://106.75.210.197:5581/rtsp/5e88c97d-9dfb-4cb9-8cab-a3c581a4b432.flv";
+        mVideoPath3 = "http://106.75.210.197:5581/rtsp/aca6be36-a0d6-4694-855a-be600be6b198.flv";
+        mVideoPath4 = "http://106.75.210.197:5581/rtsp/eff21ca3-79c1-4379-b434-f9c3884c7d44.flv";
 
         if (!TextUtils.isEmpty(mVideoPath)) {
             new RecentMediaStorage(this).saveUrlAsync(mVideoPath);
@@ -110,7 +119,13 @@ public class VideoSplit4Activity extends AppCompatActivity {
         mVideoView2.setAutoLoading(true);
         mVideoView3.setAutoLoading(true);
         mVideoView4.setAutoLoading(true);
-        // prefer mVideoPath
+
+        //使用Exo-播放器.
+//        mVideoView.set
+        // prefer mVideo
+        // +
+        //
+        // Path
         if (mVideoPath != null){
             mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
             mVideoView.start();

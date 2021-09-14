@@ -45,4 +45,10 @@
         android:layout_height="wrap_content"
         android:onClick="goVideoSplit4"
         android:text="四分屏直播" />
+    <Button
+        android:id="@+id/video_split_four_exo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goVideoSplit4Exo"
+        android:text="四分屏Exo" />
 </LinearLayout>

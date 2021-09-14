@@ -19,7 +19,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.os.Handler;
-import com.google.android.exoplayer.DefaultLoadControl;
+/*import com.google.android.exoplayer.DefaultLoadControl;
 import com.google.android.exoplayer.LoadControl;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.MediaCodecSelector;
@@ -28,25 +28,27 @@ import com.google.android.exoplayer.TrackRenderer;
 import com.google.android.exoplayer.audio.AudioCapabilities;
 import com.google.android.exoplayer.chunk.ChunkSampleSource;
 import com.google.android.exoplayer.chunk.ChunkSource;
-import com.google.android.exoplayer.chunk.FormatEvaluator.AdaptiveEvaluator;
+import com.google.android.exoplayer.chunk.FormatEvaluator.AdaptiveEvaluator;*/
 import tv.danmaku.ijk.media.exo.demo.player.DemoPlayer.RendererBuilder;
-import com.google.android.exoplayer.drm.DrmSessionManager;
-import com.google.android.exoplayer.drm.FrameworkMediaCrypto;
-import com.google.android.exoplayer.drm.MediaDrmCallback;
-import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
-import com.google.android.exoplayer.drm.UnsupportedDrmException;
-import com.google.android.exoplayer.smoothstreaming.DefaultSmoothStreamingTrackSelector;
-import com.google.android.exoplayer.smoothstreaming.SmoothStreamingChunkSource;
-import com.google.android.exoplayer.smoothstreaming.SmoothStreamingManifest;
-import com.google.android.exoplayer.smoothstreaming.SmoothStreamingManifestParser;
-import com.google.android.exoplayer.text.TextTrackRenderer;
-import com.google.android.exoplayer.upstream.DataSource;
-import com.google.android.exoplayer.upstream.DefaultAllocator;
-import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer.upstream.DefaultUriDataSource;
-import com.google.android.exoplayer.util.ManifestFetcher;
-import com.google.android.exoplayer.util.Util;
+//import com.google.android.exoplayer.drm.DrmSessionManager;
+//import com.google.android.exoplayer.drm.FrameworkMediaCrypto;
+//import com.google.android.exoplayer.drm.MediaDrmCallback;
+//import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
+//import com.google.android.exoplayer.drm.UnsupportedDrmException;
+//import com.google.android.exoplayer.smoothstreaming.DefaultSmoothStreamingTrackSelector;
+//import com.google.android.exoplayer.smoothstreaming.SmoothStreamingChunkSource;
+//import com.google.android.exoplayer.smoothstreaming.SmoothStreamingManifest;
+//import com.google.android.exoplayer.smoothstreaming.SmoothStreamingManifestParser;
+//import com.google.android.exoplayer.text.TextTrackRenderer;
+//import com.google.android.exoplayer.upstream.DataSource;
+//import com.google.android.exoplayer.upstream.DefaultAllocator;
+//import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
+//import com.google.android.exoplayer.upstream.DefaultHttpDataSource;
+//import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+//import com.google.android.exoplayer.util.ManifestFetcher;
+//import com.google.android.exoplayer.util.Util;
+import com.google.android.exoplayer2.drm.MediaDrmCallback;
+
 import java.io.IOException;
 
 /**
@@ -65,31 +67,31 @@ public class SmoothStreamingRendererBuilder implements RendererBuilder {
   private final String url;
   private final MediaDrmCallback drmCallback;
 
-  private AsyncRendererBuilder currentAsyncBuilder;
+//  private AsyncRendererBuilder currentAsyncBuilder;
 
   public SmoothStreamingRendererBuilder(Context context, String userAgent, String url,
       MediaDrmCallback drmCallback) {
     this.context = context;
     this.userAgent = userAgent;
-    this.url = Util.toLowerInvariant(url).endsWith("/manifest") ? url : url + "/Manifest";
+    this.url = url.toLowerCase().endsWith("/manifest") ? url : url + "/Manifest";
     this.drmCallback = drmCallback;
   }
 
   @Override
   public void buildRenderers(DemoPlayer player) {
-    currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, drmCallback, player);
-    currentAsyncBuilder.init();
+   /* currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, drmCallback, player);
+    currentAsyncBuilder.init();*/
   }
 
   @Override
   public void cancel() {
-    if (currentAsyncBuilder != null) {
+    /*if (currentAsyncBuilder != null) {
       currentAsyncBuilder.cancel();
       currentAsyncBuilder = null;
-    }
+    }*/
   }
 
-  private static final class AsyncRendererBuilder
+  /*private static final class AsyncRendererBuilder
       implements ManifestFetcher.ManifestCallback<SmoothStreamingManifest> {
 
     private final Context context;
@@ -199,6 +201,6 @@ public class SmoothStreamingRendererBuilder implements RendererBuilder {
       player.onRenderers(renderers, bandwidthMeter);
     }
 
-  }
+  }*/
 
 }

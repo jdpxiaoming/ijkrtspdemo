@@ -20,38 +20,40 @@ import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.os.Handler;
 import android.util.Log;
-import com.google.android.exoplayer.DefaultLoadControl;
-import com.google.android.exoplayer.LoadControl;
-import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
-import com.google.android.exoplayer.MediaCodecSelector;
-import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
-import com.google.android.exoplayer.TrackRenderer;
-import com.google.android.exoplayer.audio.AudioCapabilities;
-import com.google.android.exoplayer.chunk.ChunkSampleSource;
-import com.google.android.exoplayer.chunk.ChunkSource;
-import com.google.android.exoplayer.chunk.FormatEvaluator.AdaptiveEvaluator;
-import com.google.android.exoplayer.dash.DashChunkSource;
-import com.google.android.exoplayer.dash.DefaultDashTrackSelector;
-import com.google.android.exoplayer.dash.mpd.AdaptationSet;
-import com.google.android.exoplayer.dash.mpd.MediaPresentationDescription;
-import com.google.android.exoplayer.dash.mpd.MediaPresentationDescriptionParser;
-import com.google.android.exoplayer.dash.mpd.Period;
-import com.google.android.exoplayer.dash.mpd.UtcTimingElement;
-import com.google.android.exoplayer.dash.mpd.UtcTimingElementResolver;
-import com.google.android.exoplayer.dash.mpd.UtcTimingElementResolver.UtcTimingCallback;
+//import com.google.android.exoplayer.DefaultLoadControl;
+//import com.google.android.exoplayer.LoadControl;
+//import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
+//import com.google.android.exoplayer.MediaCodecSelector;
+//import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
+//import com.google.android.exoplayer.TrackRenderer;
+//import com.google.android.exoplayer.audio.AudioCapabilities;
+//import com.google.android.exoplayer.chunk.ChunkSampleSource;
+//import com.google.android.exoplayer.chunk.ChunkSource;
+//import com.google.android.exoplayer.chunk.FormatEvaluator.AdaptiveEvaluator;
+//import com.google.android.exoplayer.dash.DashChunkSource;
+//import com.google.android.exoplayer.dash.DefaultDashTrackSelector;
+//import com.google.android.exoplayer.dash.mpd.AdaptationSet;
+//import com.google.android.exoplayer.dash.mpd.MediaPresentationDescription;
+//import com.google.android.exoplayer.dash.mpd.MediaPresentationDescriptionParser;
+//import com.google.android.exoplayer.dash.mpd.Period;
+//import com.google.android.exoplayer.dash.mpd.UtcTimingElement;
+//import com.google.android.exoplayer.dash.mpd.UtcTimingElementResolver;
+//import com.google.android.exoplayer.dash.mpd.UtcTimingElementResolver.UtcTimingCallback;
+import com.google.android.exoplayer2.drm.MediaDrmCallback;
+
 import tv.danmaku.ijk.media.exo.demo.player.DemoPlayer.RendererBuilder;
-import com.google.android.exoplayer.drm.FrameworkMediaCrypto;
-import com.google.android.exoplayer.drm.MediaDrmCallback;
-import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
-import com.google.android.exoplayer.drm.UnsupportedDrmException;
-import com.google.android.exoplayer.text.TextTrackRenderer;
-import com.google.android.exoplayer.upstream.DataSource;
-import com.google.android.exoplayer.upstream.DefaultAllocator;
-import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer.upstream.DefaultUriDataSource;
-import com.google.android.exoplayer.upstream.UriDataSource;
-import com.google.android.exoplayer.util.ManifestFetcher;
-import com.google.android.exoplayer.util.Util;
+//import com.google.android.exoplayer.drm.FrameworkMediaCrypto;
+//import com.google.android.exoplayer.drm.MediaDrmCallback;
+//import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
+//import com.google.android.exoplayer.drm.UnsupportedDrmException;
+//import com.google.android.exoplayer.text.TextTrackRenderer;
+//import com.google.android.exoplayer.upstream.DataSource;
+//import com.google.android.exoplayer.upstream.DefaultAllocator;
+//import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
+//import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+//import com.google.android.exoplayer.upstream.UriDataSource;
+//import com.google.android.exoplayer.util.ManifestFetcher;
+//import com.google.android.exoplayer.util.Util;
 import java.io.IOException;
 
 /**
@@ -76,7 +78,7 @@ public class DashRendererBuilder implements RendererBuilder {
   private final String url;
   private final MediaDrmCallback drmCallback;
 
-  private AsyncRendererBuilder currentAsyncBuilder;
+//  private AsyncRendererBuilder currentAsyncBuilder;
 
   public DashRendererBuilder(Context context, String userAgent, String url,
       MediaDrmCallback drmCallback) {
@@ -88,19 +90,19 @@ public class DashRendererBuilder implements RendererBuilder {
 
   @Override
   public void buildRenderers(DemoPlayer player) {
-    currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, drmCallback, player);
-    currentAsyncBuilder.init();
+//    currentAsyncBuilder = new AsyncRendererBuilder(context, userAgent, url, drmCallback, player);
+//    currentAsyncBuilder.init();
   }
 
   @Override
   public void cancel() {
-    if (currentAsyncBuilder != null) {
-      currentAsyncBuilder.cancel();
-      currentAsyncBuilder = null;
-    }
+//    if (currentAsyncBuilder != null) {
+//      currentAsyncBuilder.cancel();
+//      currentAsyncBuilder = null;
+//    }
   }
 
-  private static final class AsyncRendererBuilder
+ /* private static final class AsyncRendererBuilder
       implements ManifestFetcher.ManifestCallback<MediaPresentationDescription>, UtcTimingCallback {
 
     private final Context context;
@@ -261,6 +263,6 @@ public class DashRendererBuilder implements RendererBuilder {
           .equals("L3") ? SECURITY_LEVEL_3 : SECURITY_LEVEL_UNKNOWN;
     }
 
-  }
+  }*/
 
 }

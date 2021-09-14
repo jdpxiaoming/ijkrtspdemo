@@ -73,4 +73,8 @@ public class DemoActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void goVideoSplit4Exo(View view) {
+        VideoSplit4ExoActivity.intentTo(this,"","video splite4 exo screen play .");
+    }
 }

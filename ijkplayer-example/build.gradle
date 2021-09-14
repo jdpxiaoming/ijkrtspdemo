@@ -8,6 +8,10 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     //noinspection GroovyAssignabilityCheck
 
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -27,14 +31,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    /*productFlavors {
-        all32 { minSdkVersion 21 }
-        all64 { minSdkVersion 21 }
-        // armv5 {}
-        // armv7a {}
-        // arm64 { minSdkVersion 21 }
-        // x86 {}
-    }*/
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
@@ -56,6 +52,7 @@ dependencies {
     implementation project(':ijkplayerview')
     implementation project(':ijkplayer-java')
     implementation project(':ijkplayer-armv7a')
+    implementation project(':ijkplayer-exo')
 //    implementation project(':ijkplayer-arm64')
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 //    implementation project(':ijkplayer-arm64')

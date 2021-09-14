@@ -15,39 +15,21 @@
  */
 package tv.danmaku.ijk.media.exo.demo.player;
 
+import android.content.Context;
 import android.media.MediaCodec.CryptoException;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Surface;
-import com.google.android.exoplayer.CodecCounters;
-import com.google.android.exoplayer.DummyTrackRenderer;
-import com.google.android.exoplayer.ExoPlaybackException;
-import com.google.android.exoplayer.ExoPlayer;
-import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
-import com.google.android.exoplayer.MediaCodecTrackRenderer;
-import com.google.android.exoplayer.MediaCodecTrackRenderer.DecoderInitializationException;
-import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
-import com.google.android.exoplayer.MediaFormat;
-import com.google.android.exoplayer.SingleSampleSource;
-import com.google.android.exoplayer.TimeRange;
-import com.google.android.exoplayer.TrackRenderer;
-import com.google.android.exoplayer.audio.AudioTrack;
-import com.google.android.exoplayer.chunk.ChunkSampleSource;
-import com.google.android.exoplayer.chunk.Format;
-import com.google.android.exoplayer.dash.DashChunkSource;
-import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
-import com.google.android.exoplayer.extractor.ExtractorSampleSource;
-import com.google.android.exoplayer.hls.HlsSampleSource;
-import com.google.android.exoplayer.metadata.MetadataTrackRenderer.MetadataRenderer;
-import com.google.android.exoplayer.metadata.id3.Id3Frame;
-import com.google.android.exoplayer.text.Cue;
-import com.google.android.exoplayer.text.TextRenderer;
-import com.google.android.exoplayer.upstream.BandwidthMeter;
-import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer.util.DebugTextViewHelper;
-import com.google.android.exoplayer.util.PlayerControl;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.metadata.Metadata;
+import com.google.android.exoplayer2.metadata.id3.Id3Frame;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.text.TextRenderer;
+import com.google.android.exoplayer2.ui.PlayerControlView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -56,14 +38,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * with one of a number of {link RendererBuilder} classes to suit different use cases (e.g. DASH,
  * SmoothStreaming and so on).
  */
-public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventListener,
-    HlsSampleSource.EventListener, ExtractorSampleSource.EventListener,
-    SingleSampleSource.EventListener, DefaultBandwidthMeter.EventListener,
-    MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener,
-    StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener, TextRenderer,
-    MetadataRenderer<List<Id3Frame>>, DebugTextViewHelper.Provider {
+public class DemoPlayer implements ExoPlayer.Listener/*, TextRenderer,
+    MetadataRenderer<List<Id3Frame>>, DebugTextViewHelper.Provider*/ {
+//    ChunkSampleSource.EventListener,
+//    HlsSampleSource.EventListener, ExtractorSampleSource.EventListener,
+//    SingleSampleSource.EventListener, DefaultBandwidthMeter.EventListener,
+//    MediaCodecVideoTrackRenderer.EventListener, MediaCodecAudioTrackRenderer.EventListener,
+//    StreamingDrmSessionManager.EventListener, DashChunkSource.EventListener,
 
-  /**
+    /**
    * Builds renderers for the player.
    */
   public interface RendererBuilder {
@@ -104,10 +87,10 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
    */
   public interface InternalErrorListener {
     void onRendererInitializationError(Exception e);
-    void onAudioTrackInitializationError(AudioTrack.InitializationException e);
-    void onAudioTrackWriteError(AudioTrack.WriteException e);
+//    void onAudioTrackInitializationError(AudioTrack.InitializationException e);
+//    void onAudioTrackWriteError(AudioTrack.WriteException e);
     void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs, long elapsedSinceLastFeedMs);
-    void onDecoderInitializationError(DecoderInitializationException e);
+//    void onDecoderInitializationError(DecoderInitializationException e);
     void onCryptoError(CryptoException e);
     void onLoadError(int sourceId, IOException e);
     void onDrmSessionManagerError(Exception e);
@@ -127,7 +110,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
                          long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs);
     void onDecoderInitialized(String decoderName, long elapsedRealtimeMs,
                               long initializationDurationMs);
-    void onAvailableRangeChanged(int sourceId, TimeRange availableRange);
+//    void onAvailableRangeChanged(int sourceId, TimeRange availableRange);
   }
 
   /**
@@ -146,12 +129,12 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
 
   // Constants pulled into this class for convenience.
   public static final int STATE_IDLE = ExoPlayer.STATE_IDLE;
-  public static final int STATE_PREPARING = ExoPlayer.STATE_PREPARING;
+//  public static final int STATE_PREPARING = ExoPlayer.STATE_PREPARING;
   public static final int STATE_BUFFERING = ExoPlayer.STATE_BUFFERING;
   public static final int STATE_READY = ExoPlayer.STATE_READY;
   public static final int STATE_ENDED = ExoPlayer.STATE_ENDED;
-  public static final int TRACK_DISABLED = ExoPlayer.TRACK_DISABLED;
-  public static final int TRACK_DEFAULT = ExoPlayer.TRACK_DEFAULT;
+//  public static final int TRACK_DISABLED = ExoPlayer.TRACK_DISABLED;
+//  public static final int TRACK_DEFAULT = ExoPlayer.TRACK_DEFAULT;
 
   public static final int RENDERER_COUNT = 4;
   public static final int TYPE_VIDEO = 0;
@@ -164,8 +147,8 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   private static final int RENDERER_BUILDING_STATE_BUILT = 3;
 
   private final RendererBuilder rendererBuilder;
-  private final ExoPlayer player;
-  private final PlayerControl playerControl;
+  private final SimpleExoPlayer player;
+  private final PlayerControlView playerControl;
   private final Handler mainHandler;
   private final CopyOnWriteArrayList<Listener> listeners;
 
@@ -174,8 +157,8 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   private boolean lastReportedPlayWhenReady;
 
   private Surface surface;
-  private TrackRenderer videoRenderer;
-  private CodecCounters codecCounters;
+//  private TrackRenderer videoRenderer;
+//  private CodecCounters codecCounters;
   private Format videoFormat;
   private int videoTrackToRestore;
 
@@ -187,22 +170,23 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   private InternalErrorListener internalErrorListener;
   private InfoListener infoListener;
 
-  public DemoPlayer(RendererBuilder rendererBuilder) {
+  public DemoPlayer(RendererBuilder rendererBuilder, Context context) {
     this.rendererBuilder = rendererBuilder;
-    player = ExoPlayer.Factory.newInstance(RENDERER_COUNT, 1000, 5000);
+//    player = ExoPlayer.Factory.newInstance(RENDERER_COUNT, 1000, 5000);
+    player = new SimpleExoPlayer.Builder(context).build();
     player.addListener(this);
-    playerControl = new PlayerControl(player);
+    playerControl = new PlayerControlView(context);
     mainHandler = new Handler();
     listeners = new CopyOnWriteArrayList<>();
     lastReportedPlaybackState = STATE_IDLE;
     rendererBuildingState = RENDERER_BUILDING_STATE_IDLE;
     // Disable text initially.
-    player.setSelectedTrack(TYPE_TEXT, TRACK_DISABLED);
+//    player.setSelectedTrack(TYPE_TEXT, TRACK_DISABLED);
   }
 
-  public PlayerControl getPlayerControl() {
-    return playerControl;
-  }
+//  public PlayerControl getPlayerControl() {
+//    return playerControl;
+//  }
 
   public void addListener(Listener listener) {
     listeners.add(listener);
@@ -230,6 +214,8 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
 
   public void setSurface(Surface surface) {
     this.surface = surface;
+
+
     pushSurface(false);
   }
 
@@ -242,7 +228,11 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     pushSurface(true);
   }
 
-  public int getTrackCount(int type) {
+    public int getSelectedTrack(int type) {
+        return type;//player.getSelectedTrack(type);
+    }
+
+ /* public int getTrackCount(int type) {
     return player.getTrackCount(type);
   }
 
@@ -250,9 +240,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     return player.getTrackFormat(type, index);
   }
 
-  public int getSelectedTrack(int type) {
-    return player.getSelectedTrack(type);
-  }
+
 
   public void setSelectedTrack(int type, int index) {
     player.setSelectedTrack(type, index);
@@ -277,7 +265,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     } else {
       setSelectedTrack(TYPE_VIDEO, videoTrackToRestore);
     }
-  }
+  }*/
 
   public void prepare() {
     if (rendererBuildingState == RENDERER_BUILDING_STATE_BUILT) {
@@ -285,54 +273,11 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     }
     rendererBuilder.cancel();
     videoFormat = null;
-    videoRenderer = null;
+//    videoRenderer = null;
     rendererBuildingState = RENDERER_BUILDING_STATE_BUILDING;
     maybeReportPlayerState();
     rendererBuilder.buildRenderers(this);
   }
-
-  /**
-   * Invoked with the results from a {link RendererBuilder}.
-   *
-   * @param renderers Renderers indexed by {link DemoPlayer} TYPE_* constants. An individual
-   *     element may be null if there do not exist tracks of the corresponding type.
-   * @param bandwidthMeter Provides an estimate of the currently available bandwidth. May be null.
-   */
-  /* package */ void onRenderers(TrackRenderer[] renderers, BandwidthMeter bandwidthMeter) {
-    for (int i = 0; i < RENDERER_COUNT; i++) {
-      if (renderers[i] == null) {
-        // Convert a null renderer to a dummy renderer.
-        renderers[i] = new DummyTrackRenderer();
-      }
-    }
-    // Complete preparation.
-    this.videoRenderer = renderers[TYPE_VIDEO];
-    this.codecCounters = videoRenderer instanceof MediaCodecTrackRenderer
-        ? ((MediaCodecTrackRenderer) videoRenderer).codecCounters
-        : renderers[TYPE_AUDIO] instanceof MediaCodecTrackRenderer
-        ? ((MediaCodecTrackRenderer) renderers[TYPE_AUDIO]).codecCounters : null;
-    this.bandwidthMeter = bandwidthMeter;
-    pushSurface(false);
-    player.prepare(renderers);
-    rendererBuildingState = RENDERER_BUILDING_STATE_BUILT;
-  }
-
-  /**
-   * Invoked if a {link RendererBuilder} encounters an error.
-   *
-   * @param e Describes the error.
-   */
-  /* package */ void onRenderersError(Exception e) {
-    if (internalErrorListener != null) {
-      internalErrorListener.onRendererInitializationError(e);
-    }
-    for (Listener listener : listeners) {
-      listener.onError(e);
-    }
-    rendererBuildingState = RENDERER_BUILDING_STATE_IDLE;
-    maybeReportPlayerState();
-  }
-
   public void setPlayWhenReady(boolean playWhenReady) {
     player.setPlayWhenReady(playWhenReady);
   }
@@ -350,18 +295,18 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
 
   public int getPlaybackState() {
     if (rendererBuildingState == RENDERER_BUILDING_STATE_BUILDING) {
-      return STATE_PREPARING;
+      return STATE_BUFFERING;//STATE_PREPARING;
     }
     int playerState = player.getPlaybackState();
     if (rendererBuildingState == RENDERER_BUILDING_STATE_BUILT && playerState == STATE_IDLE) {
       // This is an edge case where the renderers are built, but are still being passed to the
       // player's playback thread.
-      return STATE_PREPARING;
+      return STATE_BUFFERING;//STATE_PREPARING;
     }
     return playerState;
   }
 
-  @Override
+  /*@Override
   public Format getFormat() {
     return videoFormat;
   }
@@ -374,9 +319,8 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   @Override
   public CodecCounters getCodecCounters() {
     return codecCounters;
-  }
+  }*/
 
-  @Override
   public long getCurrentPosition() {
     return player.getCurrentPosition();
   }
@@ -406,14 +350,14 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     maybeReportPlayerState();
   }
 
-  @Override
+  /*@Override
   public void onPlayerError(ExoPlaybackException exception) {
     rendererBuildingState = RENDERER_BUILDING_STATE_IDLE;
     for (Listener listener : listeners) {
       listener.onError(exception);
     }
   }
-
+*/
   @Override
   public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees,
       float pixelWidthHeightRatio) {
@@ -422,7 +366,27 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     }
   }
 
-  @Override
+    @Override
+    public void onCues(List<Cue> cues) {
+       /* if (captionListener != null && getSelectedTrack(TYPE_TEXT) != TRACK_DISABLED) {
+            captionListener.onCues(cues);
+        }*/
+    }
+
+/*
+    @Override
+    public void onMetadata(List<Id3Frame> id3Frames) {
+//        if (id3MetadataListener != null && getSelectedTrack(TYPE_METADATA) != TRACK_DISABLED) {
+            id3MetadataListener.onId3Metadata(id3Frames);
+//        }
+    }*/
+
+    @Override
+    public void onMetadata(Metadata metadata) {
+
+    }
+
+    /*@Override
   public void onDroppedFrames(int count, long elapsed) {
     if (infoListener != null) {
       infoListener.onDroppedFrames(count, elapsed);
@@ -512,19 +476,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     }
   }
 
-  @Override
-  public void onCues(List<Cue> cues) {
-    if (captionListener != null && getSelectedTrack(TYPE_TEXT) != TRACK_DISABLED) {
-      captionListener.onCues(cues);
-    }
-  }
 
-  @Override
-  public void onMetadata(List<Id3Frame> id3Frames) {
-    if (id3MetadataListener != null && getSelectedTrack(TYPE_METADATA) != TRACK_DISABLED) {
-      id3MetadataListener.onId3Metadata(id3Frames);
-    }
-  }
 
   @Override
   public void onAvailableRangeChanged(int sourceId, TimeRange availableRange) {
@@ -569,7 +521,7 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
   @Override
   public void onUpstreamDiscarded(int sourceId, long mediaStartTimeMs, long mediaEndTimeMs) {
     // Do nothing.
-  }
+  }*/
 
   private void maybeReportPlayerState() {
     boolean playWhenReady = player.getPlayWhenReady();
@@ -583,18 +535,18 @@ public class DemoPlayer implements ExoPlayer.Listener, ChunkSampleSource.EventLi
     }
   }
 
-  private void pushSurface(boolean blockForSurfacePush) {
-    if (videoRenderer == null) {
-      return;
-    }
-
-    if (blockForSurfacePush) {
+private void pushSurface(boolean blockForSurfacePush) {
+//    if (videoRenderer == null) {
+//      return;
+//    }
+    /*if (blockForSurfacePush) {
       player.blockingSendMessage(
           videoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, surface);
     } else {
       player.sendMessage(
           videoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, surface);
-    }
+    }*/
+    player.setVideoSurface(surface);
   }
 
 }

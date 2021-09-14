@@ -17,11 +17,15 @@ package tv.danmaku.ijk.media.exo.demo;
 
 import android.annotation.TargetApi;
 import android.text.TextUtils;
-import com.google.android.exoplayer.drm.ExoMediaDrm.KeyRequest;
-import com.google.android.exoplayer.drm.ExoMediaDrm.ProvisionRequest;
-import com.google.android.exoplayer.drm.MediaDrmCallback;
-import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
-import com.google.android.exoplayer.util.Util;
+//import com.google.android.exoplayer.drm.ExoMediaDrm.KeyRequest;
+//import com.google.android.exoplayer.drm.ExoMediaDrm.ProvisionRequest;
+//import com.google.android.exoplayer.drm.MediaDrmCallback;
+//import com.google.android.exoplayer.drm.StreamingDrmSessionManager;
+//import com.google.android.exoplayer.util.Util;
+import com.google.android.exoplayer2.drm.ExoMediaDrm;
+import com.google.android.exoplayer2.drm.MediaDrmCallback;
+import com.google.android.exoplayer2.drm.MediaDrmCallbackException;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,7 +51,17 @@ public class SmoothStreamingTestMediaDrmCallback implements MediaDrmCallback {
     KEY_REQUEST_PROPERTIES = keyRequestProperties;
   }
 
-  @Override
+    @Override
+    public byte[] executeProvisionRequest(UUID uuid, ExoMediaDrm.ProvisionRequest request) throws MediaDrmCallbackException {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] executeKeyRequest(UUID uuid, ExoMediaDrm.KeyRequest request) throws MediaDrmCallbackException {
+        return new byte[0];
+    }
+
+  /*@Override
   public byte[] executeProvisionRequest(UUID uuid, ProvisionRequest request) throws IOException {
     String url = request.getDefaultUrl() + "&signedRequest=" + new String(request.getData());
     return Util.executePost(url, null, PROVISIONING_REQUEST_PROPERTIES);
@@ -60,6 +74,6 @@ public class SmoothStreamingTestMediaDrmCallback implements MediaDrmCallback {
       url = PLAYREADY_TEST_DEFAULT_URI;
     }
     return Util.executePost(url, request.getData(), KEY_REQUEST_PROPERTIES);
-  }
+  }*/
 
 }
