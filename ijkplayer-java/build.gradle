@@ -25,7 +25,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 //新建一个任务，这里只需要定义名字，下面的配置文件中会自动获取相关配置信息.
-//uploadArchives {
-//
-//}
+uploadArchives {
+
+}
 apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");

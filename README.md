@@ -13,11 +13,11 @@ ijkplayer open the rtsp &amp; h265 surpport  .
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
-    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
-    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.25'
+    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
+    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.25'
     //看情况如果需要64位so则引入.
-    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.25'
 ```
 
 
@@ -29,16 +29,14 @@ IjkMediaPlayer.loadLibrariesOnce(null);
 IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
 ```
 
-# 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
-- 从jcenter更换到Google Maven Central
-```groovy
-    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
-    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
-    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
-    //看情况如果需要64位so则引入.
-    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.24'
+# 0.0.25 音频去掉opense硬解码，改为可配置
+```java
+ //打开opense,h264下有效. 
+ mVideoView.setAudioHardWare(true);
 ```
 
+# 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
+- 从jcenter更换到Google Maven Central
 
 # 0.0.23 增加自定义参数选项.
 ```java

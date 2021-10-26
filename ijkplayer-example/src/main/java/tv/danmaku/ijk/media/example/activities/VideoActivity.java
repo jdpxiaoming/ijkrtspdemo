@@ -91,7 +91,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "rtsp://113.31.110.87:5555/rtsp/43a40e52-cd86-425c-8367-f27b4611b772";//PCMU.
+        mVideoPath = "http://113.31.102.114:5581/rtsp/43e935c2-baa2-41e4-9924-ea2537f122be.flv";//IPC - h264.
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -116,6 +116,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
         mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
+        //打开opense,h264下有效.
+        mVideoView.setAudioHardWare(true);
 //        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //设置h265
         if(mVideoPath.startsWith("rtsp")){
@@ -135,8 +137,14 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
             return;
         }
 
-        //测试单视频倍速播放.
-//        mVideoView.openZeroVideoDelay(true);
+        //准备就绪，做一些配置操作，比如音视频同步方式.
+        mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(IMediaPlayer mp) {
+                Log.e(TAG, "onPrepared#done! ");
+                mVideoView.openZeroVideoDelay(true);
+            }
+        });
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
@@ -152,14 +160,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
             }
         });
 
-        //准备就绪，做一些配置操作，比如音视频同步方式.
-        mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(IMediaPlayer mp) {
-                Log.e(TAG, "onPrepared#done! ");
-                mVideoView.openZeroVideoDelay(true);
-            }
-        });
+
 
         mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
         mLastStartTime = SystemClock.currentThreadTimeMillis();
@@ -167,7 +168,6 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView.start();
     }
 
-    @Override
     public void onBackPressed() {
         mBackPressed = true;
         super.onBackPressed();

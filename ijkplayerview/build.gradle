@@ -18,18 +18,22 @@ android {
         jniLibs.srcDirs 'src/main/libs'
         jni.srcDirs = [] // This prevents the auto generation of Android.mk
     }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation project(path: ':ijkplayer-java')
-    implementation project(path: ':ijkplayer-exo')
+//    implementation project(path: ':ijkplayer-java')
+//    implementation project(path: ':ijkplayer-exo')
 //    替换成包名依赖，方便打包上传nexus
-//    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
 }
 uploadArchives{
 
 }
-apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle");
+apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");

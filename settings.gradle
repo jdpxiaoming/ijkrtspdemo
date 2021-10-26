@@ -1,4 +1,4 @@
-include ':extension-ffmpeg-release'
+//include ':extension-ffmpeg-release'
 include ':ijkplayer-armv7a', ':ijkplayerview'
 include ':ijkplayer-arm64'
 

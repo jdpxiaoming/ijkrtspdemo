@@ -53,14 +53,13 @@ dependencies {
     implementation project(':ijkplayer-java')
     implementation project(':ijkplayer-armv7a')
     implementation project(':ijkplayer-exo')
-//    implementation project(':ijkplayer-arm64')
+    implementation project(':ijkplayer-arm64')
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
-//    implementation project(':ijkplayer-arm64')
 //    替换成包名依赖，方便打包上传nexus
-//    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.24'
+//    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.25'
+//    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
+//    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.25'
+//    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.25'
 //    内存泄漏辅助类
     debugImplementation ('com.squareup.leakcanary:leakcanary-android:2.2') {
         exclude group : 'com.android.support'

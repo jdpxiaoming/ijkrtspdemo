@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.exo.IjkExoMediaPlayer;
+//import tv.danmaku.ijk.media.exo.IjkExoMediaPlayer;
 import tv.danmaku.ijk.media.ijkplayerview.R;
 import tv.danmaku.ijk.media.ijkplayerview.services.MediaPlayerService;
 import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
@@ -1225,6 +1225,21 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private boolean isHardWare = true;
 
     /**
+     * 是否开启openSe硬解码.
+     * 默认：关闭 因为部分视频格式为32k hz会导致音频延迟2s以上.
+     */
+    private boolean isAudioHardWare = false;
+
+
+    public boolean isAudioHardWare() {
+        return isAudioHardWare;
+    }
+
+    public void setAudioHardWare(boolean audioHardWare) {
+        isAudioHardWare = audioHardWare;
+    }
+
+    /**
      * 判断当前播放的视频是否为硬解码.
      *
      * @return
@@ -1309,7 +1324,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         isVideoZeroDelay = isOpen;
         if (mMediaPlayer != null) {
             if (mMediaPlayer instanceof IjkMediaPlayer) {
-                Log.e(TAG, "openZeroVideoDelay#setVideoZeroDelay \n");
+                Log.e(TAG, "openZeroVideoDelay#setVideoZeroDelay: "+isVideoZeroDelay);
                 ((IjkMediaPlayer) mMediaPlayer).setVideoZeroDelay(isVideoZeroDelay);
             }
         } else {
@@ -1330,12 +1345,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
 
         switch (playerType) {
-            case Settings.PV_PLAYER__IjkExoMediaPlayer: {
+            case Settings.PV_PLAYER__IjkExoMediaPlayer:
+//                {
                 Log.i(TAG, "create exo player!~~~");
-                IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);
-                mediaPlayer = IjkExoMediaPlayer;
-            }
-            break;
+//                IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);
+//                mediaPlayer = IjkExoMediaPlayer;
+//            }
+//            break;
             case Settings.PV_PLAYER__AndroidMediaPlayer: {
                 AndroidMediaPlayer androidMediaPlayer = new AndroidMediaPlayer();
                 mediaPlayer = androidMediaPlayer;
@@ -1409,16 +1425,18 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * @param ijkMediaPlayer
      */
     private void makeFastOpenPlayer(IjkMediaPlayer ijkMediaPlayer) {
+        Log.i(TAG,"makeFastOpenPlayer()");
         //H265默认使用软解，硬解暂时不支持.
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
         if (!isH265) {
             int hardCode = isHardWare ? 1 : 0;
+            int audiohardCode = isAudioHardWare ? 1 : 0;
             //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", audiohardCode);
             //开启硬解码mediacodec，开启后h265无法播放. do:h265关闭硬件加速
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
             //开启h265硬解码.开启后h265无法播放. do:h265关闭硬件加速
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
         }
         //rtsp支持
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
@@ -1473,27 +1491,33 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * @param ijkMediaPlayer
      */
     private void makeLivingPlayerNoDelay(IjkMediaPlayer ijkMediaPlayer) {
+        Log.i(TAG,"makeLivingPlayerNoDelay()");
         //安卓摄像头是默认Nv21，尝试Yv12。
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
 
         if (!isH265) {
             int hardCode = isHardWare ? 1 : 0;
-            //开启opensles.
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            int audiohardCode = isAudioHardWare ? 1 : 0;
+            //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", audiohardCode);
             //开启硬解码mediacodec
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
             //开启h265硬解码.
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
+//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", hardCode);
         }
 
         //rtsp支持
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
+        String path = getUrl();
 
-
+        if(path !=null && path.startsWith("rtsp")){
+            Log.i(TAG,"set rtsp prefer tcp!");
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
+        }
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
 
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
+
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
 
@@ -1538,12 +1562,14 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      * @param ijkMediaPlayer
      */
     private void makeHttpPlayerMP4(IjkMediaPlayer ijkMediaPlayer) {
+        Log.i(TAG,"makeHttpPlayerMP4()");
         //安卓摄像头是默认Nv21，尝试Yv12。
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
         if (!isH265) {
             int hardCode = isHardWare ? 1 : 0;
-            //开启opensles.
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", hardCode);
+            int audiohardCode = isAudioHardWare ? 1 : 0;
+            //开启opensles.开启后h265无法播放. do:h265关闭硬件加速
+            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", audiohardCode);
             //开启硬解码mediacodec
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", hardCode);
             //开启h265硬解码.
