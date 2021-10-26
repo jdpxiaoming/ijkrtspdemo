@@ -1,5 +1,33 @@
-# ijkrtspdemo
-ijkplayer open the rtsp &amp; h265 surpport android demo . 
+# ijkrtsp
+ijkplayer open the rtsp &amp; h265 surpport  . 
+
+# Function
+- PCMA audio surpport.
+- H265 video surpport .
+- Video Sync model .(video zero delay!)
+- rtsp over tcp surpport. 
+- flv living model. 
+- loading view .
+
+## 在主项目中build.gradle引入以下库
+
+```groovy
+    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.24'
+    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.24'
+    //看情况如果需要64位so则引入.
+    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.24'
+```
+
+
+### 初始化
+
+```java
+ // init player
+IjkMediaPlayer.loadLibrariesOnce(null);
+IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
+```
+
 # 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
 - 从jcenter更换到Google Maven Central
 ```groovy
@@ -11,7 +39,7 @@ ijkplayer open the rtsp &amp; h265 surpport android demo .
 ```
 
 
-# 0.0.23 增加自定义参数选项. 
+# 0.0.23 增加自定义参数选项.
 ```java
 mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
 ```
@@ -24,7 +52,7 @@ mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
 ```
 
 # 0.0.21 关闭无效的vp_duration的log信息.
-- 2020/12/28 publish. 
+- 2020/12/28 publish.
 
 # 0.0.20 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
 - you should invoke this method on prepare callback (需要再prepare回调方法中处理同步方式)
@@ -69,44 +97,11 @@ IjkMediaPlayer_setZeroDelay(JNIEnv *env, jobject thiz, jint delayOpen)
 ```
 # 0.0.18 优化直播延时.
 - 升级ffmpeg3.4->ffmpeg4.0
-- 优化直播0延时观看flv 
+- 优化直播0延时观看flv
 
-# 0.0.17 修改ffmpeg的打包名字，解决和其他ffmpeg库的冲突. 
-- 修改libijkffmpeg.so->libijkwdzffmpeg 
+# 0.0.17 修改ffmpeg的打包名字，解决和其他ffmpeg库的冲突.
+- 修改libijkffmpeg.so->libijkwdzffmpeg
 
-# 更换git库测试. 内网服务绑成大赛被重用
-
-## 引入私有库地址.
-```groovy
-allprojects {
-    repositories {
-        maven {
-            url "https://dl.bintray.com/media/maven"
-        }
-        google()
-        jcenter()
-    }
-}
-```
-
-## 在主项目中build.gradle引入以下库
-
-```groovy
-    implementation 'com.github.jdpxiaoming:ijkplayerview:0.0.23'
-    implementation 'com.github.jdpxiaoming:ijkplayer-java:0.0.23'
-    implementation 'com.github.jdpxiaoming:ijkplayer-armv7a:0.0.23'
-    //看情况如果需要64位so则引入.
-    implementation 'com.github.jdpxiaoming:ijkplayer-arm64:0.0.23'
-```
-
-
-### 初始化
-
-```java
- // init player
-IjkMediaPlayer.loadLibrariesOnce(null);
-IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
-```
 
 ### 设置View的填充模式
 ```java
