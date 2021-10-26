@@ -2,12 +2,13 @@
 ijkplayer open the rtsp &amp; h265 surpport  . 
 
 # Function
-- PCMA audio surpport.
+- PCMA/PCMU audio surpport.
 - H265 video surpport .
 - Video Sync model .(video zero delay!)
 - rtsp over tcp surpport. 
 - flv living model. 
 - loading view .
+- ffmpeg4.0 .
 
 ## 在主项目中build.gradle引入以下库
 
