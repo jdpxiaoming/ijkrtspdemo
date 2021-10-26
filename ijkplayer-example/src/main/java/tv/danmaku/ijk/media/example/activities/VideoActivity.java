@@ -88,10 +88,10 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         //设置启用exoPlayer.
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String key = this.getString(tv.danmaku.ijk.media.ijkplayerview.R.string.pref_key_player);
-        mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkExoMediaPlayer)).apply();
+        mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "http://106.75.210.197:5581/rtsp/03de5042-87e7-4853-b659-98dbf012dc1e.flv";
+        mVideoPath = "rtsp://113.31.110.87:5555/rtsp/43a40e52-cd86-425c-8367-f27b4611b772";//PCMU.
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,20 +115,20 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
-//        mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
-        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
+//        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //设置h265
         if(mVideoPath.startsWith("rtsp")){
             mVideoView.setH265(true);
-            mVideoView.openZeroVideoDelay(false);
+            mVideoView.openZeroVideoDelay(true);
         }else{
             //打开视频0延迟.
-//            mVideoView.openZeroVideoDelay(true);
+            mVideoView.openZeroVideoDelay(true);
         }
 
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
         else {
             Log.e(TAG, "Null Data Source\n");
             finish();
@@ -149,6 +149,15 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
                 }
                 return false;
 
+            }
+        });
+
+        //准备就绪，做一些配置操作，比如音视频同步方式.
+        mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(IMediaPlayer mp) {
+                Log.e(TAG, "onPrepared#done! ");
+                mVideoView.openZeroVideoDelay(true);
             }
         });
 

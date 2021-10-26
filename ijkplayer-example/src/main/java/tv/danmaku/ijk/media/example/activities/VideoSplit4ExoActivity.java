@@ -19,6 +19,7 @@ package tv.danmaku.ijk.media.example.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -27,8 +28,22 @@ import android.view.SurfaceView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
+import com.google.android.exoplayer2.util.Log;
+import com.google.android.exoplayer2.util.Util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
@@ -52,6 +67,7 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
     private AndroidMediaController mMediaController;
     private SurfaceView mVideoView,mVideoView2,mVideoView3,mVideoView4,mVideoView5,mVideoView6;
     private SimpleExoPlayer player,player2,player3,player4,player5,player6;
+    private RtspMediaSource mediaSources;//配置rtsp用.
 
     public static Intent newIntent(Context context, String videoPath, String videoTitle) {
         Intent intent = new Intent(context, VideoSplit4ExoActivity.class);
@@ -73,37 +89,45 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
 
 
-        player = new SimpleExoPlayer.Builder(this).build();
-        player2 = new SimpleExoPlayer.Builder(this).build();
-        player3 = new SimpleExoPlayer.Builder(this).build();
-        player4 = new SimpleExoPlayer.Builder(this).build();
-        player5 = new SimpleExoPlayer.Builder(this).build();
-        player6 = new SimpleExoPlayer.Builder(this).build();
+        // handle arguments
+        mVideoPath =  "http://113.31.119.60:5581/rtsp/f5b7164f-af85-4731-b54c-6c4aad8a2a4a.flv";
+        mVideoPath2 = "rtmp://113.31.119.60:2935/rtsp/f5b7164f-af85-4731-b54c-6c4aad8a2a4a";//rtsp -aac h264
+//        mVideoPath3 = "rtsp://113.31.119.60:5555/rtsp/35d1ebac-da5c-49df-856e-e7ef6eae7024";
+//        mVideoPath4 = "http://113.31.119.60:5581/rtsp/b838b687-bd65-4e16-8996-114f6bc31d4d.flv";
+//        mVideoPath5 = "http://106.75.210.197:5581/rtsp/e7069f2d-e181-413e-b71c-a326d2e54267.flv";
+//        mVideoPath6 = "http://106.75.210.197:5581/rtsp/03de5042-87e7-4853-b659-98dbf012dc1e.flv";
 
         // init player
         mVideoView =  findViewById(R.id.video_view);
         mVideoView2 = findViewById(R.id.video_view2);
-        mVideoView3 = findViewById(R.id.video_view3);
-        mVideoView4 = findViewById(R.id.video_view4);
-        mVideoView5 = findViewById(R.id.video_view5);
-        mVideoView6 = findViewById(R.id.video_view6);
+//        mVideoView3 = findViewById(R.id.video_view3);
+//        mVideoView4 = findViewById(R.id.video_view4);
+//        mVideoView5 = findViewById(R.id.video_view5);
+//        mVideoView6 = findViewById(R.id.video_view6);
+
+
+        boolean preferExtensionDecoders = true;
+//          intent.getBooleanExtra(PREFER_EXTENSION_DECODERS_EXTRA, false);
+        RenderersFactory renderersFactory =new DefaultRenderersFactory(/* context= */ this)
+                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+
+        player = new SimpleExoPlayer.Builder(this,renderersFactory).build();
+        player2 = new SimpleExoPlayer.Builder(this,renderersFactory).build();
+//        player3 = new SimpleExoPlayer.Builder(this).build();
+//        player4 = new SimpleExoPlayer.Builder(this).build();
+//        player5 = new SimpleExoPlayer.Builder(this).build();
+//        player6 = new SimpleExoPlayer.Builder(this).build();
 
         //binding views .
         player.setVideoSurfaceView(mVideoView);
         player2.setVideoSurfaceView(mVideoView2);
-        player3.setVideoSurfaceView(mVideoView3);
-        player4.setVideoSurfaceView(mVideoView4);
-        player5.setVideoSurfaceView(mVideoView5);
-        player6.setVideoSurfaceView(mVideoView6);
+//        player3.setVideoSurfaceView(mVideoView3);
+//        player4.setVideoSurfaceView(mVideoView4);
+//        player5.setVideoSurfaceView(mVideoView5);
+//        player6.setVideoSurfaceView(mVideoView6);
 
 
-        // handle arguments
-        mVideoPath =  "http://202.umbrellary.com:1000/4K_1.mp4";
-        mVideoPath2 = "http://202.umbrellary.com:1000/4K_2.mp4";
-        mVideoPath3 = "http://106.75.254.198:5581/rtsp/fdd98321-00f3-472d-bbfa-4d8841b557f8.flv";
-        mVideoPath4 = "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
-        mVideoPath5 = "http://106.75.210.197:5581/rtsp/8d7143c1-64f7-44be-9bf4-8479e189dd70.flv";
-        mVideoPath6 = "http://106.75.254.198:5581/rtsp/fdd98321-00f3-472d-bbfa-4d8841b557f8.flv";
+
 //        mVideoPath2 = mVideoPath;
 //        mVideoPath3 = mVideoPath;
 //        mVideoPath4 = mVideoPath;
@@ -115,41 +139,18 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
         mMediaController = new AndroidMediaController(this, false);
         mMediaController.setSupportActionBar(actionBar);
 
-        //auto loading video .
-//        mVideoView.setAutoLoading(true);
-//        mVideoView2.setAutoLoading(true);
-//        mVideoView3.setAutoLoading(true);
-//        mVideoView4.setAutoLoading(true);
-
-        //使用Exo-播放器.
-//        mVideoView.set
-        // prefer mVideo
-        // +
-        //
-        // Path
-//        if (mVideoPath != null){
-           /* mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-            mVideoView.start();
-
-            mVideoView2.setVideoPath(mVideoPath2, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-            mVideoView2.start();
-
-            mVideoView3.setVideoPath(mVideoPath3, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-            mVideoView3.start();
-
-            mVideoView4.setVideoPath(mVideoPath4, IjkVideoView.IJK_TYPE_LIVING_WATCH);
-            mVideoView4.start();*/
-//        }
-
         MediaItem mediaItem = MediaItem.fromUri(mVideoPath);
         MediaItem mediaItem2 = MediaItem.fromUri(mVideoPath2);
-        MediaItem mediaItem3 = MediaItem.fromUri(mVideoPath3);
-        MediaItem mediaItem4 = MediaItem.fromUri(mVideoPath4);
-        MediaItem mediaItem5 = MediaItem.fromUri(mVideoPath5);
-        MediaItem mediaItem6 = MediaItem.fromUri(mVideoPath6);
+//        MediaItem mediaItem3 = MediaItem.fromUri(mVideoPath3);
+//        MediaItem mediaItem4 = MediaItem.fromUri(mVideoPath4);
+//        MediaItem mediaItem5 = MediaItem.fromUri(mVideoPath5);
+//        MediaItem mediaItem6 = MediaItem.fromUri(mVideoPath6);
 
         player.setMediaItem(mediaItem);
         player2.setMediaItem(mediaItem2);
+//        mediaSources = createTopLevelMediaSources();
+        // TODO: 2021/10/16 使用rtsp支持的meidasource来播放数据.
+//        player2.setMediaSource(mediaSources);
 //        player3.setMediaItem(mediaItem3);
 //        player4.setMediaItem(mediaItem4);
 //        player5.setMediaItem(mediaItem5);
@@ -169,6 +170,15 @@ public class VideoSplit4ExoActivity extends AppCompatActivity {
 //        player4.play();
 //        player5.play();
 //        player6.play();
+    }
+
+
+    private RtspMediaSource createTopLevelMediaSources() {
+        Log.i(TAG,"createTopLevelMediaSources");
+        MediaItem mediaItem2 = MediaItem.fromUri(mVideoPath2);
+        return new RtspMediaSource.Factory()
+                .setForceUseRtpTcp(true)
+                .createMediaSource(mediaItem2);
     }
 
     @Override

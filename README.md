@@ -27,7 +27,18 @@ mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
 - 2020/12/28 publish. 
 
 # 0.0.20 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
-- you should invoke this method befor xx.setVideoPath!
+- you should invoke this method on prepare callback (需要再prepare回调方法中处理同步方式)
+```java
+ //准备就绪，做一些配置操作，比如音视频同步方式. 
+        mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(IMediaPlayer mp) {
+                Log.e(TAG, "onPrepared#done! ");
+                mVideoView.openZeroVideoDelay(true);
+            }
+        });
+```
+
 ```c
 /**
 * 0延时开关. 
