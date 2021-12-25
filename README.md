@@ -13,11 +13,11 @@ ijkplayer open the rtsp &amp; h265 surpport  .
 ## 在主项目中build.gradle引入以下库
 
 ```groovy
-    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.25'
-    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
-    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.25'
+    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.26'
+    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.26'
+    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.26'
     //看情况如果需要64位so则引入.
-    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.25'
+    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.26'
 ```
 
 
@@ -29,31 +29,25 @@ IjkMediaPlayer.loadLibrariesOnce(null);
 IjkMediaPlayer.native_profileBegin(IjkMediaPlayer.IJK_LIB_NAME_FFMPEG);
 ```
 
-# 0.0.25 音频去掉opense硬解码，改为可配置
+# 音频去掉opense硬解码，改为可配置
 ```java
  //打开opense,h264下有效. 
  mVideoView.setAudioHardWare(true);
 ```
 
-# 0.0.24 放开倍速播放超过2.0倍速无法倍速播放.
-- 从jcenter更换到Google Maven Central
-
-# 0.0.23 增加自定义参数选项.
+# 增加自定义参数选项.
 ```java
 mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
 ```
 
-# 0.0.22 打开iJkview 设置旋转角度
+# 打开iJkview 设置旋转角度
 ```java 
   //设置视频旋转角度. 
   mVideoView?.isIgnoreRotation = false;
   mVideoView?.setVideoRotationDegree(0)
 ```
 
-# 0.0.21 关闭无效的vp_duration的log信息.
-- 2020/12/28 publish.
-
-# 0.0.20 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
+# 打开0延迟的时候默认增加同步方式为`AV_SYNC_VIDEO_MASTER`，默认为音频同步为主.
 - you should invoke this method on prepare callback (需要再prepare回调方法中处理同步方式)
 ```java
  //准备就绪，做一些配置操作，比如音视频同步方式. 
@@ -66,42 +60,11 @@ mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_CUSTOMER_PLAY)
         });
 ```
 
-```c
-/**
-* 0延时开关. 
-*@delayOpen  0:关闭 1：开启 默认关闭. 
-*/
-static void
-IjkMediaPlayer_setZeroDelay(JNIEnv *env, jobject thiz, jint delayOpen)
-{
-    ALOGD("IjkMediaPlayer_setZeroDelay delay_forbidden =  %d",delayOpen);
-    MPTRACE("%s\n", __func__);
-    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
-	  //给mediaplayer赋值. 
-    mp->ffplayer->delay_forbidden = delayOpen;
-    //如果打开0延迟则设置视频为主同步
-    if(delayOpen){
-      mp->ffplayer->av_sync_type  = AV_SYNC_VIDEO_MASTER; 
-    } else {
-      mp->ffplayer->av_sync_type  = AV_SYNC_AUDIO_MASTER; 
-    }
-    ijkmp_dec_ref_p(&mp);
-}
-
-```
-#0.0.19 增加0延迟开关（0延迟会有2s的音频不同步出现，慎用）
+# 增加0延迟开关（0延迟会有2s的音频不同步出现，慎用）
 ```java
  //打开视频0延迟.
  mVideoView.openZeroVideoDelay(true);
 ```
-# 0.0.18 优化直播延时.
-- 升级ffmpeg3.4->ffmpeg4.0
-- 优化直播0延时观看flv
-
-# 0.0.17 修改ffmpeg的打包名字，解决和其他ffmpeg库的冲突.
-- 修改libijkffmpeg.so->libijkwdzffmpeg
-
-
 ### 设置View的填充模式
 ```java
 mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
@@ -149,10 +112,16 @@ public interface IRenderView {
 ```java
  mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
 ```
+### 设置流请求时候`header`-`user-agent`
+```java
+//set the headers properties in user-agent. 
+        mVideoView.setUserAgentStr("Android_Station_V1.1.1");
+```
 
 ### 实现Mp4文件边下边播放
 - 引入下载代理库 : `implementation 'com.danikula:videocache:2.7.1'`
 - 定义Application. 
+
 ```java 
 /**
  * comment:
@@ -175,6 +144,7 @@ public class PApplication extends Application {
     }
 }
 ```
+
 - 处理播放url
 ```java
 mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";

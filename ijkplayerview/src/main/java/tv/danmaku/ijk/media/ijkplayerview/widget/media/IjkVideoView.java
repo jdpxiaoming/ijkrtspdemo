@@ -161,6 +161,12 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private Map<String, Long> playerMap;
     private Map<String, String> formatStringMap;
 
+    /**
+     * 版本好信息 用于头部的user-agent.
+     * @param context
+     */
+    private String mUserAgentStr = "Android_Station_V1.1.1";
+
     public IjkVideoView(Context context) {
         super(context);
         initVideoView(context);
@@ -180,6 +186,22 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     public IjkVideoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initVideoView(context);
+    }
+
+    /**
+     * 获取当前播放器的user-agent.
+     * @return
+     */
+    public String getUserAgentStr() {
+        return mUserAgentStr;
+    }
+
+    /**
+     * 设置http和rtsp中的user-agent.
+     * @param userAgentStr
+     */
+    public void setUserAgentStr(String userAgentStr) {
+        this.mUserAgentStr = userAgentStr;
     }
 
     // REMOVED: onMeasure
@@ -1371,6 +1393,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "stimeout", mTimeOut);
                         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", mTimeOut);
                     }
+                    //user-argent.Android_Station_V1.1.1 方便媒体后台统计点播端来源.
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"user_agent",mUserAgentStr);
+
                     switch (mURLType) {
                         case IJK_TYPE_LIVING_LOW_DELAY://rtsp低延迟
                             //互动营销低延迟<300ms.

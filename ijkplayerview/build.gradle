@@ -21,6 +21,14 @@ android {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
+
+    //压制doc生成失败退出publish问题.
+    tasks.withType(Javadoc) {
+        failOnError false
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
+    }
 }
 
 

@@ -91,7 +91,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "http://113.31.102.114:5581/rtsp/43e935c2-baa2-41e4-9924-ea2537f122be.flv";//IPC - h264.
+        mVideoPath = "rtsp://106.75.210.197:5555/rtsp/66fbb1e3-1834-466f-a4b8-b7e01e04a130";//IPC - h264.
 
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -119,6 +119,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         //打开opense,h264下有效.
         mVideoView.setAudioHardWare(true);
 //        mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        //set the headers properties in user-agent.
+        mVideoView.setUserAgentStr("Android_Station_V1.1.1");
         //设置h265
         if(mVideoPath.startsWith("rtsp")){
             mVideoView.setH265(true);
