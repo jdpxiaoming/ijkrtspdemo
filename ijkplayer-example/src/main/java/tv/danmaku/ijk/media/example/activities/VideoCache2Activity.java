@@ -36,10 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.danikula.videocache.HttpProxyCacheServer;
-
 import tv.danmaku.ijk.media.example.R;
-import tv.danmaku.ijk.media.example.application.PApplication;
 import tv.danmaku.ijk.media.example.fragments.TracksFragment;
 import tv.danmaku.ijk.media.ijkplayerview.utils.Settings;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
@@ -94,8 +91,8 @@ public class VideoCache2Activity extends AppCompatActivity implements TracksFrag
         // handle arguments
         //3分钟视频.8.9M左右
         mVideoPath = "https://ovopark-record.oss-cn-shanghai.aliyuncs.com/039570f6-e4c3-4a1b-9886-5ad7e6d7181f.mp4";
-        HttpProxyCacheServer proxy = PApplication.getProxy(this);
-        String proxyUrl = proxy.getProxyUrl(mVideoPath);
+//        HttpProxyCacheServer proxy = PApplication.getProxy(this);
+//        String proxyUrl = proxy.getProxyUrl(mVideoPath);
 
 
         /*if (!TextUtils.isEmpty(mVideoPath)) {
@@ -125,7 +122,7 @@ public class VideoCache2Activity extends AppCompatActivity implements TracksFrag
         mVideoView.setHudView(mHudView);
         // prefer mVideoPath
         if (mVideoPath != null)
-            mVideoView.setVideoPath(proxyUrl, IjkVideoView.IJK_TYPE_HTTP_PLAY);
+            mVideoView.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY);
         else if (mVideoUri != null)
             mVideoView.setVideoURI(mVideoUri);
         else {

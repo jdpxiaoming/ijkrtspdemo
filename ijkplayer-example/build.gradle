@@ -3,14 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     // http://tools.android.com/tech-docs/new-build-system/tips
     //noinspection GroovyAssignabilityCheck
     compileSdkVersion rootProject.ext.compileSdkVersion
     //noinspection GroovyAssignabilityCheck
 
-    compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        targetCompatibility JavaVersion.VERSION_17
+//    }
 
     lintOptions {
         abortOnError false
@@ -65,5 +69,5 @@ dependencies {
         exclude group : 'com.android.support'
     }
     //实现oss存储的mp4文件边下边播.
-    implementation 'com.danikula:videocache:2.7.1'
+//    implementation 'com.danikula:videocache:2.7.1'
 }

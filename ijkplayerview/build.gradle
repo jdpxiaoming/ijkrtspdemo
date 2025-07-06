@@ -41,7 +41,7 @@ dependencies {
 //    替换成包名依赖，方便打包上传nexus
     implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
 }
-uploadArchives{
-
-}
-apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");
+//uploadArchives{
+//
+//}
+//apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");

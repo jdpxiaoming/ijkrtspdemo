@@ -90,8 +90,8 @@ class VideoCacheActivity : AppCompatActivity() {
 
     private fun init() {
         mVideoPath = "http://ovopark.oss-cn-hangzhou.aliyuncs.com/video_video_1612540142579.mp4"
-        val proxy = PApplication.getProxy(this)
-        val proxyUrl = proxy.getProxyUrl(mVideoPath)
+//        val proxy = PApplication.getProxy(this)
+//        val proxyUrl = proxy.getProxyUrl(mVideoPath)
         // init player
         IjkMediaPlayer.loadLibrariesOnce(null)
         IjkMediaPlayer.native_profileBegin("libijkplayer.so")
@@ -138,7 +138,7 @@ class VideoCacheActivity : AppCompatActivity() {
         mVideoView?.isIgnoreRotation = false;
         mVideoView?.setVideoRotationDegree(0)
         // prefer mVideoPath
-        mVideoView?.setVideoPath(proxyUrl, IjkVideoView.IJK_TYPE_HTTP_PLAY)
+        mVideoView?.setVideoPath(mVideoPath, IjkVideoView.IJK_TYPE_HTTP_PLAY)
     }
 
     override fun onBackPressed() {

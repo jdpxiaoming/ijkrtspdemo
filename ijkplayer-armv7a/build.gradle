@@ -24,7 +24,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
-uploadArchives {
-
-}
-apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");
+//uploadArchives {
+//
+//}
+//apply from: new File(rootProject.projectDir, "tools/gradle-mvn-push.gradle");
