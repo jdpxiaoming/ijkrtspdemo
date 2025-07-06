@@ -18,7 +18,6 @@
         android:layout_gravity="right|center_vertical"
         android:background="@color/ijk_transparent_dark"
         android:padding="8dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,19 +26,67 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/status_text"
+        <RadioGroup
+            android:id="@+id/radio_group_record_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="准备就绪"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
-        <Button
-            android:id="@+id/record_button"
+            <RadioButton
+                android:id="@+id/radio_direct_record"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="直接录制"
+                android:textColor="#FFFFFF"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radio_transcode_record"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="转码录制"
+                android:textColor="#FFFFFF" />
+        </RadioGroup>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="开始录制" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_start_record"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="开始录制" />
+
+            <Button
+                android:id="@+id/btn_stop_record"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="停止录制" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_record_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="未录制"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_record_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </RelativeLayout> 

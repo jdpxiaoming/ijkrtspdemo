@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,12 +44,24 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class RecordSampleActivity extends AppCompatActivity {
     private IjkVideoView mVideoView;
-    private TextView mStatusTextView;
-    private Button mRecordButton;
-    private boolean isRecording = false;
-    private String mRecordFilePath;
+//    private TextView mStatusTextView;
+//    private Button mRecordButton;
+//    private boolean isRecording = false;
+//    private String mRecordFilePath;
     private AndroidMediaController mMediaController;
     private TableLayout mHudView;
+
+    private Button mStartRecordButton;
+    private Button mStopRecordButton;
+    private TextView mRecordStatusText;
+    private TextView mRecordPathText;
+    private RadioGroup mRecordModeGroup;
+    private RadioButton mDirectRecordRadio;
+    private RadioButton mTranscodeRecordRadio;
+
+    private boolean isRecording = false;
+    private String mRecordPath;
+    private boolean mUseTranscode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +75,21 @@ public class RecordSampleActivity extends AppCompatActivity {
 
         // 设置默认URL，这里使用的是一个直播流URL
         String url = "http://113.31.112.143:5581/rtsp/f5a1b08f-6299-41d1-8c5a-d6af4ef0d4cc.flv";
+        url = "rtmp://113.31.112.143:2935/rtsp/f5a1b08f-6299-41d1-8c5a-d6af4ef0d4cc";
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
 
         mVideoView = findViewById(R.id.video_view);
-        mStatusTextView = findViewById(R.id.status_text);
-        mRecordButton = findViewById(R.id.record_button);
+        mStartRecordButton = findViewById(R.id.btn_start_record);
+        mStopRecordButton = findViewById(R.id.btn_stop_record);
+        mRecordStatusText = findViewById(R.id.text_record_status);
+        mRecordPathText = findViewById(R.id.text_record_path);
+        mRecordModeGroup = findViewById(R.id.radio_group_record_mode);
+        mDirectRecordRadio = findViewById(R.id.radio_direct_record);
+        mTranscodeRecordRadio = findViewById(R.id.radio_transcode_record);
+//        mStatusTextView = findViewById(R.id.status_text);
+//        mRecordButton = findViewById(R.id.record_button);
 
         //start play living。
         mVideoView.setMediaController(mMediaController);
@@ -88,12 +110,38 @@ public class RecordSampleActivity extends AppCompatActivity {
         mVideoView.start();
 
         // 设置录制按钮的点击事件
-        mRecordButton.setOnClickListener(new View.OnClickListener() {
+//        mRecordButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                toggleRecording();
+//            }
+//        });
+
+        // 设置录制模式选择
+        mRecordModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                toggleRecording();
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                mUseTranscode = (checkedId == R.id.radio_transcode_record);
             }
         });
+
+        // 开始录制按钮
+        mStartRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRecord();
+            }
+        });
+
+        // 停止录制按钮
+        mStopRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopRecord();
+            }
+        });
+
+        updateUI();
     }
 
     public static void intentTo(Context context, String videoPath, String videoTitle) {
@@ -103,74 +151,87 @@ public class RecordSampleActivity extends AppCompatActivity {
 
         context.startActivity(intent);
     }
-
-    private void toggleRecording() {
-        IjkMediaPlayer player = (IjkMediaPlayer) mVideoView.getMediaPlayer();
-        if (player == null) {
-            Toast.makeText(this, "播放器未初始化", Toast.LENGTH_SHORT).show();
+    private void startRecord() {
+        if (isRecording) {
+            Toast.makeText(this, "已经在录制中", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(player instanceof IjkMediaPlayer){
-            player = (IjkMediaPlayer) player;
+
+        // 创建录制文件路径
+        File recordDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MOVIES), "IjkRecords");
+        if (!recordDir.exists()) {
+            recordDir.mkdirs();
         }
 
-        if (isRecording) {
-            // 停止录制
-            int ret = player.stopRecord();
-            if (ret == 0) {
-                isRecording = false;
-                mRecordButton.setText("开始录制");
-                mStatusTextView.setText("已停止录制：" + mRecordFilePath);
-                Toast.makeText(this, "录制已停止", Toast.LENGTH_SHORT).show();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String fileName = "record_" + sdf.format(new Date()) + ".mp4";
+        mRecordPath = new File(recordDir, fileName).getAbsolutePath();
+
+        // 获取IjkMediaPlayer实例
+        IjkMediaPlayer player = mVideoView.getMediaPlayer();
+
+        if (player != null && player instanceof IjkMediaPlayer) {
+            int result;
+            if (mUseTranscode) {
+                // 使用转码录制
+                result = player.startRecordTranscode(mRecordPath);
             } else {
-                Toast.makeText(this, "停止录制失败：" + ret, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // 开始录制
-            File recordDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_MOVIES), "IjkRecords");
-            if (!recordDir.exists() && !recordDir.mkdirs()) {
-                Toast.makeText(this, "无法创建录制目录", Toast.LENGTH_SHORT).show();
-                return;
+                // 直接录制
+                result = player.startRecord(mRecordPath);
             }
 
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                    .format(new Date());
-            mRecordFilePath = new File(recordDir, "ijkrecord_" + timestamp + ".mp4").getAbsolutePath();
-            
-            int ret = player.startRecord(mRecordFilePath);
-            if (ret == 0) {
+            if (result == 0) {
                 isRecording = true;
-                mRecordButton.setText("停止录制");
-                mStatusTextView.setText("录制中...");
                 Toast.makeText(this, "开始录制", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "开始录制失败：" + ret, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "录制失败: " + result, Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(this, "播放器未就绪", Toast.LENGTH_SHORT).show();
         }
+
+        updateUI();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // 如果在录制，暂停时停止录制
-        if (isRecording) {
-            IjkMediaPlayer player = (IjkMediaPlayer) mVideoView.getMediaPlayer();
-            if (player != null) {
-                player.stopRecord();
-            }
-            isRecording = false;
-            mRecordButton.setText("开始录制");
-            mStatusTextView.setText("已停止录制：" + mRecordFilePath);
+    private void stopRecord() {
+        if (!isRecording) {
+            Toast.makeText(this, "没有正在进行的录制", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        IjkMediaPlayer player = mVideoView.getMediaPlayer();
+        if (player != null) {
+            int result = player.stopRecord();
+            if (result == 0) {
+                isRecording = false;
+                Toast.makeText(this, "录制已停止，文件保存在: " + mRecordPath, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "停止录制失败: " + result, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        updateUI();
+    }
+
+    private void updateUI() {
+        mStartRecordButton.setEnabled(!isRecording);
+        mStopRecordButton.setEnabled(isRecording);
+        mRecordStatusText.setText(isRecording ? "录制中..." : "未录制");
+        mRecordPathText.setText(isRecording ? "保存路径: " + mRecordPath : "");
+        mRecordModeGroup.setEnabled(!isRecording);
     }
 
     @Override
     protected void onDestroy() {
+        if (isRecording) {
+            stopRecord();
+        }
+        if (mVideoView != null) {
+            mVideoView.stopPlayback();
+            mVideoView.release(true);
+            IjkMediaPlayer.native_profileEnd();
+        }
         super.onDestroy();
-        // 释放播放器资源
-        mVideoView.stopPlayback();
-        mVideoView.release(true);
-        IjkMediaPlayer.native_profileEnd();
     }
-} 
+}
