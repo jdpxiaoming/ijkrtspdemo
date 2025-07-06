@@ -29,8 +29,8 @@
         android:id="@+id/cache_btn2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="goVideoCache2"
-        android:text="Http边下边播2" />
+        android:onClick="goVideoRecord"
+        android:text="直播边播边录Mp4" />
 
     <Button
         android:id="@+id/customer_btn"

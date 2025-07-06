@@ -21,6 +21,95 @@ ijkplayer open the rtsp &amp; h265 surpport  .
 ```
 
 
+
+# IJKPlayer直播录制功能
+
+本项目为IJKPlayer添加了直播录制功能，使用户能够将正在观看的直播内容保存为本地MP4文件。
+
+## 功能概述
+
+- 支持将正在播放的直播流录制为MP4文件
+- 提供简单的Java API接口：`startRecord`和`stopRecord`
+- 包含示例Activity展示如何使用录制功能
+- 在播放直播的同时进行录制，不影响视频播放体验
+
+## 实现细节
+
+### C层实现
+
+1. 在`ff_ffplay.h`和`ff_ffplay.c`中添加了录制相关函数：
+    - `ffp_start_record`: 开始录制
+    - `ffp_stop_record`: 停止录制
+    - `ffp_record_file`: 将视频数据包写入MP4文件
+
+2. 在`read_thread`函数中添加了录制处理逻辑，当`ffp->is_record`为true时，将接收到的数据包写入MP4文件。
+
+### JNI层实现
+
+1. 在`ijkplayer_jni.c`中实现了JNI接口：
+    - `IjkMediaPlayer_startRecord`: 调用`ijkmp_start_record`开始录制
+    - `IjkMediaPlayer_stopRecord`: 调用`ijkmp_stop_record`停止录制
+
+2. 在JNI注册表中注册了以上接口，使Java层可以调用它们。
+
+### Java层实现
+
+1. 在`IjkMediaPlayer.java`中添加了录制接口：
+    - `startRecord(String filePath)`: 开始录制到指定路径
+    - `stopRecord()`: 停止录制
+
+2. 创建了示例Activity `RecordSampleActivity`，演示如何使用录制功能：
+    - 提供按钮控制录制的开始和停止
+    - 显示录制状态和保存路径
+    - 处理生命周期事件，确保正确释放资源
+
+## 使用方法
+
+### 基本用法
+
+```java
+// 假设已经初始化了IjkMediaPlayer并开始播放
+IjkMediaPlayer player = new IjkMediaPlayer();
+player.setDataSource(url);
+player.prepare();
+player.start();
+
+// 开始录制
+String recordPath = "/storage/emulated/0/Movies/record.mp4";
+int result = player.startRecord(recordPath);
+if (result == 0) {
+    // 录制开始成功
+} else {
+    // 录制开始失败
+}
+
+// ... 播放过程中 ...
+
+// 停止录制
+player.stopRecord();
+```
+
+### 注意事项
+
+1. 确保应用有写入外部存储的权限
+2. 录制会增加CPU和内存占用，可能影响播放性能
+3. 录制的文件可能会很大，请确保有足够的存储空间
+4. 直播录制时应考虑网络波动带来的影响
+
+## 示例代码
+
+详见`RecordSampleActivity.java`，它提供了完整的录制功能演示。
+
+## 未来改进
+
+1. 添加录制质量和格式控制
+2. 实现暂停/继续录制功能
+3. 添加录制时间限制
+4. 优化录制过程中的性能
+5. 增加录制事件回调
+
+
+
 ### 初始化
 
 ```java

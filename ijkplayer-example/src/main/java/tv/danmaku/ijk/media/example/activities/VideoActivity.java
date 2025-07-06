@@ -58,9 +58,9 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private String mVideoPath ;
 
     private AndroidMediaController mMediaController;
+    private TableLayout mHudView;
     private IjkVideoView mVideoView;
     private TextView mToastTextView;
-    private TableLayout mHudView;
     private DrawerLayout mDrawerLayout;
     private ViewGroup mRightDrawer;
     private Settings mSettings;

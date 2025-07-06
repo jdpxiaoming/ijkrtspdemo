@@ -30,6 +30,9 @@ import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.application.AppActivity;
 import tv.danmaku.ijk.media.example.fragments.SampleMediaListFragment;
 
+/**
+ * 首页demo.
+ */
 public class SampleMediaActivity extends AppActivity  {
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, SampleMediaActivity.class);

@@ -63,6 +63,10 @@ public class DemoActivity extends AppCompatActivity {
         VideoSplit4Activity.intentTo(this,"","video splite4screen play .");
     }
 
+    //边下边录.
+    public void goVideoRecord(View view) {
+        RecordSampleActivity.intentTo(this,"","video record play .");
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
