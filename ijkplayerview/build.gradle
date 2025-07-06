@@ -36,10 +36,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.preference:preference:1.1.1'
-//    implementation project(path: ':ijkplayer-java')
+    implementation project(':ijkplayer-java')
 //    implementation project(path: ':ijkplayer-exo')
 //    替换成包名依赖，方便打包上传nexus
-    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
+//    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
 }
 //uploadArchives{
 //

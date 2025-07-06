@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.Rect;
 import android.media.MediaCodecInfo;
@@ -1321,8 +1322,9 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     public static native void native_profileBegin(String libName);
     public static native void native_profileEnd();
     public static native void native_setLogLevel(int level);
-    public static native int _startRecord(String filePath);
-    public static native int _stopRecord();
+    private native int _startRecord(String filePath);
+    private native int _stopRecord();
+    private native boolean _getCurrentFrame(Bitmap bitmap);
 
     // 添加开始录制功能
     public int startRecord(String filePath) {
@@ -1334,4 +1336,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         return _stopRecord();
     }
 
+    /**
+     * 获取截屏.
+     * @param bitmap
+     * return true: 成功 false: 失败
+     */
+    public boolean getCurrentFrame(Bitmap bitmap) {
+       return _getCurrentFrame(bitmap);
+    }
 }

@@ -110,6 +110,9 @@ public class RecordSampleActivity extends AppCompatActivity {
             Toast.makeText(this, "播放器未初始化", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(player instanceof IjkMediaPlayer){
+            player = (IjkMediaPlayer) player;
+        }
 
         if (isRecording) {
             // 停止录制
