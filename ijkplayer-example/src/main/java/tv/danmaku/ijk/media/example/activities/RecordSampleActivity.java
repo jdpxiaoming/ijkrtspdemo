@@ -74,8 +74,10 @@ public class RecordSampleActivity extends AppCompatActivity {
         mHudView = (TableLayout) findViewById(R.id.hud_view);
 
         // 设置默认URL，这里使用的是一个直播流URL
-        String url = "http://113.31.112.143:5581/rtsp/f5a1b08f-6299-41d1-8c5a-d6af4ef0d4cc.flv";
-        url = "rtmp://113.31.112.143:2935/rtsp/f5a1b08f-6299-41d1-8c5a-d6af4ef0d4cc";
+        String url = "http://45.120.102.25:5591/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750.flv";
+//        url = "rtsp://45.120.102.25:5555/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750";
+//        url = "rtsp://221.181.75.22:5555/rtsp/8528596c-aaac-4452-a6d1-91feba53845d";//rtsp://hevc+pcma
+        url = "https://ds-ctmu-ningbo-g1-006.ovopark.com:5582/rtsp/d5fe17b8-e5ad-4698-888d-d0489ff4f793.flv";//rtsp://hevc+pcma
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
@@ -97,6 +99,7 @@ public class RecordSampleActivity extends AppCompatActivity {
         mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         //打开opense,h264下有效.
         mVideoView.setAudioHardWare(true);
+        mVideoView.setH265(true);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //set the headers properties in user-agent.
         mVideoView.setUserAgentStr("Android_Station_V1.1.1");
