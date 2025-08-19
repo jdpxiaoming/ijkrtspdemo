@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -40,10 +42,13 @@ import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.AndroidMediaController;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IRenderView;
 import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class RecordSampleActivity extends AppCompatActivity {
     private IjkVideoView mVideoView;
+    private static String TAG = "RecordSampleActivity";
+
 //    private TextView mStatusTextView;
 //    private Button mRecordButton;
 //    private boolean isRecording = false;
@@ -77,7 +82,7 @@ public class RecordSampleActivity extends AppCompatActivity {
         String url = "http://45.120.102.25:5591/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750.flv";
 //        url = "rtsp://45.120.102.25:5555/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750";
 //        url = "rtsp://221.181.75.22:5555/rtsp/8528596c-aaac-4452-a6d1-91feba53845d";//rtsp://hevc+pcma
-        url = "https://ds-ctmu-ningbo-g1-006.ovopark.com:5582/rtsp/d5fe17b8-e5ad-4698-888d-d0489ff4f793.flv";//rtsp://hevc+pcma
+        url = "rtsp://14.103.132.239:5555/rtsp/196c8e5c-f7cf-478d-8c67-752a125a3a9c";//rtsp://hevc+pcma
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
@@ -111,6 +116,34 @@ public class RecordSampleActivity extends AppCompatActivity {
         mVideoView.setAspectRatio(IRenderView.AR_16_9_FIT_PARENT);
         // 开始播放
         mVideoView.start();
+
+
+        //监听播放成功.
+        mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(IMediaPlayer mp) {
+                // 播放成功后设置为可录制状态
+//                mStartRecordButton.setEnabled(true);
+//                mStopRecordButton.setEnabled(false);
+            }
+        });
+
+        long mLastStartTime = SystemClock.currentThreadTimeMillis();
+
+        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+                Log.e(TAG, "onInfo#position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
+                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
+                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
+                    Log.i(TAG, "加载视频prepare耗时#=====================> " + takeTime + " ms");
+                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
+                    mVideoView.setVolume(8.0f);
+                }
+                return false;
+
+            }
+        });
 
         // 设置录制按钮的点击事件
 //        mRecordButton.setOnClickListener(new View.OnClickListener() {
