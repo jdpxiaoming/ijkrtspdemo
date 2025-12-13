@@ -82,7 +82,7 @@ public class RecordSampleActivity extends AppCompatActivity {
         String url = "http://45.120.102.25:5591/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750.flv";
 //        url = "rtsp://45.120.102.25:5555/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750";
 //        url = "rtsp://221.181.75.22:5555/rtsp/8528596c-aaac-4452-a6d1-91feba53845d";//rtsp://hevc+pcma
-        url = "rtsp://14.103.132.239:5555/rtsp/196c8e5c-f7cf-478d-8c67-752a125a3a9c";//rtsp://hevc+pcma
+        url = "https://ds-volcengine-shanghai-g1-003.ovopark.com:5582/rtmp/228257cc-3346-41af-ba87-bdd75a2897ba.flv";//rtsp://hevc+pcma
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
@@ -103,8 +103,8 @@ public class RecordSampleActivity extends AppCompatActivity {
         mVideoView.setHudView(mHudView);
         mVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         //打开opense,h264下有效.
-        mVideoView.setAudioHardWare(true);
-        mVideoView.setH265(true);
+//        mVideoView.setAudioHardWare(true);
+//        mVideoView.setH265(true);
         mVideoView.setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         //set the headers properties in user-agent.
         mVideoView.setUserAgentStr("Android_Station_V1.1.1");
@@ -130,20 +130,20 @@ public class RecordSampleActivity extends AppCompatActivity {
 
         long mLastStartTime = SystemClock.currentThreadTimeMillis();
 
-        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-                Log.e(TAG, "onInfo#position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
-                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
-                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
-                    Log.i(TAG, "加载视频prepare耗时#=====================> " + takeTime + " ms");
-                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
-                    mVideoView.setVolume(8.0f);
-                }
-                return false;
-
-            }
-        });
+//        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+//            @Override
+//            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+//                Log.e(TAG, "onInfo#position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
+//                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
+//                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
+//                    Log.i(TAG, "加载视频prepare耗时#=====================> " + takeTime + " ms");
+//                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
+//                    mVideoView.setVolume(8.0f);
+//                }
+//                return false;
+//
+//            }
+//        });
 
         // 设置录制按钮的点击事件
 //        mRecordButton.setOnClickListener(new View.OnClickListener() {
