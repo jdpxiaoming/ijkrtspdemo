@@ -1,14 +1,25 @@
 # ijkrtsp
 ijkplayer open the rtsp &amp; h265 surpport  . 
 
-# Function
+
+# 16kb对齐. 
+# 编译环境
+# gradle 
+- `gradle/wrapper/gradle-7.4.2`
+- ` classpath 'com.android.tools.build:gradle:7.0.4' // 原版本可能是3.x` 
+
+# Function 
+- 16kb对齐.
+- flv魔改支持h265+opus.
+- recording when play living video(rtsp/flv...)
 - PCMA/PCMU audio surpport.
 - H265 video surpport .
 - Video Sync model .(video zero delay!)
 - rtsp over tcp surpport. 
 - flv living model. 
 - loading view .
-- ffmpeg4.0 .
+- ffmpeg4.3.
+openssl1.1.1wW.  (https support).
 
 ## 在主项目中build.gradle引入以下库
 
