@@ -1,22 +1,36 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.4.10'
-    ext.anko_version = '0.10.5'
+    ext.kotlin_version = '1.9.23'
     repositories {
-//        maven {
-//            url 'http://172.16.22.18:8082/repository/maven-public/'
-//        }
-//        maven { url "https://maven.google.com" }
+        gradlePluginPortal()
+        mavenCentral()
+
+
+        //阿里云Maven仓库地址
+        maven {
+            allowInsecureProtocol = true
+            url "http://maven.aliyun.com/nexus/content/repositories/releases"
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'https://maven.aliyun.com/repository/public'
+        }
         google()
-        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+
+
+        maven {
+            allowInsecureProtocol = true
+            url 'https://jitpack.io'
+        }
     }
     dependencies {
         // 在dependencies块中修改
-        classpath 'com.android.tools.build:gradle:7.0.4' // 原版本可能是3.x
+        classpath 'com.android.tools.build:gradle:8.13.2' // 原版本可能是3.x
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:2.2.0"
 //        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -26,13 +40,20 @@ buildscript {
 allprojects {
     repositories {
         //新发布的应用10分钟可以同步到repo1,maven central 需要2个小时.
-        maven { url 'https://repo1.maven.org/maven2/'}
+        maven {
+            allowInsecureProtocol = true
+            url 'https://repo1.maven.org/maven2/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'https://maven.aliyun.com/repository/public'
+        }
         google()
         maven { url "https://maven.google.com" }
-//        maven {
-//            url "https://dl.bintray.com/media/maven"
-//        }
-        jcenter()
+        maven {
+            allowInsecureProtocol = true
+            url "https://jitpack.io"
+        }
     }
 }
 
