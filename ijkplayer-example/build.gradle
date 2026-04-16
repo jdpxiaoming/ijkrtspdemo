@@ -7,40 +7,43 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    // http://tools.android.com/tech-docs/new-build-system/tips
-    //noinspection GroovyAssignabilityCheck
+    
     compileSdkVersion rootProject.ext.compileSdkVersion
-    //noinspection GroovyAssignabilityCheck
-
-//    compileOptions {
-//        targetCompatibility JavaVersion.VERSION_17
-//    }
 
     lintOptions {
         abortOnError false
     }
+
     defaultConfig {
         applicationId "tv.danmaku.ijk.media.example"
         minSdkVersion rootProject.ext.minSdkVersion as int
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        
+        // M3 Max Dev Optimization: Only build arm64 for debug
         ndk {
-            abiFilters 'armeabi-v7a','arme64-v8a'
+            abiFilters 'arm64-v8a'
         }
     }
+
     buildTypes {
         debug {
+            // Speed up builds by only compiling for the architecture of your M3 Mac or modern test device
             ndk {
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
+                abiFilters 'arm64-v8a'
             }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters 'armeabi-v7a', 'arm64-v8a'
+            }
         }
     }
 }
+
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
@@ -51,6 +54,7 @@ configurations.all {
         }
     }
 }
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -60,13 +64,12 @@ dependencies {
     implementation 'com.squareup:otto:1.3.8'
     implementation project(':ijkplayerview')
     implementation project(':ijkplayer-java')
-    implementation project(':ijkplayer-armv7a')
     implementation project(':ijkplayer-exo')
+    
+    // Conditional inclusion to avoid heavy native compilation if not needed
     implementation project(':ijkplayer-arm64')
+    // We keep v7a for release builds via standard dependency management
+    implementation project(':ijkplayer-armv7a')
+
     implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
-//    替换成包名依赖，方便打包上传nexus
-//    implementation 'io.github.jdpxiaoming:ijkplayer-view:0.0.25'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-java:0.0.25'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-armv7a:0.0.25'
-//    implementation 'io.github.jdpxiaoming:ijkplayer-arm64:0.0.25'
 }

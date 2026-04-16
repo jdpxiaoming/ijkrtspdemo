@@ -50,6 +50,7 @@ import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.fragments.TracksFragment;
 
 /**
+ * 直播.
  * ijkplayer 视频播放类.
  */
 public class VideoActivity extends AppCompatActivity implements TracksFragment.ITrackHolder {
@@ -91,8 +92,10 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSharedPreferences.edit().putString(key,String.valueOf(Settings.PV_PLAYER__IjkMediaPlayer)).apply();
 
         // handle arguments
-        mVideoPath = "rtsp://106.75.210.197:5555/rtsp/66fbb1e3-1834-466f-a4b8-b7e01e04a130";//IPC - h264.
+//        mVideoPath = "rtsp://106.75.210.197:5555/rtsp/66fbb1e3-1834-466f-a4b8-b7e01e04a130";//IPC - h264.
+//        mVideoPath = "https://ds-ctmu-ningbo-g1-012.ovopark.com:5582/rtsp/f6eea257-ad3c-4915-9867-d81b39ac0bfa.flv";
 
+        mVideoPath = "https://ds-ctmu-ningbo-g1-012.ovopark.com:5582/rtsp/3c824a8b-1402-44f6-a09a-f2af9c0e4608.flv";
         // init UI
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

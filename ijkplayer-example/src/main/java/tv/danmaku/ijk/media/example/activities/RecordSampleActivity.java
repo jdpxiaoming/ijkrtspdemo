@@ -45,17 +45,15 @@ import tv.danmaku.ijk.media.ijkplayerview.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
+/**
+ * 边播边录demo.
+ * @author cxm 2025-07-06.
+ */
 public class RecordSampleActivity extends AppCompatActivity {
     private IjkVideoView mVideoView;
     private static String TAG = "RecordSampleActivity";
-
-//    private TextView mStatusTextView;
-//    private Button mRecordButton;
-//    private boolean isRecording = false;
-//    private String mRecordFilePath;
     private AndroidMediaController mMediaController;
     private TableLayout mHudView;
-
     private Button mStartRecordButton;
     private Button mStopRecordButton;
     private TextView mRecordStatusText;
@@ -63,7 +61,6 @@ public class RecordSampleActivity extends AppCompatActivity {
     private RadioGroup mRecordModeGroup;
     private RadioButton mDirectRecordRadio;
     private RadioButton mTranscodeRecordRadio;
-
     private boolean isRecording = false;
     private String mRecordPath;
     private boolean mUseTranscode = false;
