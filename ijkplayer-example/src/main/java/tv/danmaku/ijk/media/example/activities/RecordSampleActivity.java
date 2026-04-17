@@ -79,7 +79,7 @@ public class RecordSampleActivity extends AppCompatActivity {
         String url = "http://45.120.102.25:5591/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750.flv";
 //        url = "rtsp://45.120.102.25:5555/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750";
 //        url = "rtsp://221.181.75.22:5555/rtsp/8528596c-aaac-4452-a6d1-91feba53845d";//rtsp://hevc+pcma
-        url = "https://ds-volcengine-shanghai-g1-003.ovopark.com:5582/rtmp/228257cc-3346-41af-ba87-bdd75a2897ba.flv";//rtsp://hevc+pcma
+        url = "https://ds-ctmu-ningbo-g1-004.ovopark.com:5582/rtsp/31307064-8008-4f89-b31d-184ba97d4f74.flv";//rtsp://hevc+pcma
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
