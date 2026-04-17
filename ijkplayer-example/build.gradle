@@ -3,12 +3,20 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace "tv.danmaku.ijk.media.example"
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false // 不压缩so库
+//            pageSize = 16384 // 16KB页对齐
+        }
+    }
 
     lintOptions {
         abortOnError false
