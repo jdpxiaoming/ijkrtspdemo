@@ -51,4 +51,10 @@
         android:layout_height="wrap_content"
         android:onClick="goVideoSplit4Exo"
         android:text="四分屏Exo" />
+    <Button
+        android:id="@+id/ffmpeg_cmd_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goFFmpegCMD"
+        android:text="FFmpegCMD" />
 </LinearLayout>
