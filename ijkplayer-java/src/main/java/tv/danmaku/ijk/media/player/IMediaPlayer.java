@@ -59,6 +59,10 @@ public interface IMediaPlayer {
     int MEDIA_INFO_VIDEO_SEEK_RENDERING_START = 10008;
     int MEDIA_INFO_AUDIO_SEEK_RENDERING_START = 10009;
     int MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE = 10100;
+    /**
+     * 停止录播本地文件保存完成.
+     */
+    int MEDIA_INFO_RECORD_FINISH         = 10101; // extra == 0 means file trailer/close completed
 
     int MEDIA_ERROR_UNKNOWN = 1;
     int MEDIA_ERROR_SERVER_DIED = 100;

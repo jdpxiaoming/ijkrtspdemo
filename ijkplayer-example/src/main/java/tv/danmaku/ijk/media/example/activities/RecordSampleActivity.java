@@ -79,7 +79,7 @@ public class RecordSampleActivity extends AppCompatActivity {
         String url = "http://45.120.102.25:5591/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750.flv";
 //        url = "rtsp://45.120.102.25:5555/rtsp/e6d12da7-d2d2-48b5-9dd9-a82630f1a750";
 //        url = "rtsp://221.181.75.22:5555/rtsp/8528596c-aaac-4452-a6d1-91feba53845d";//rtsp://hevc+pcma
-        url = "https://ds-ctmu-ningbo-g1-004.ovopark.com:5582/rtsp/31307064-8008-4f89-b31d-184ba97d4f74.flv";//rtsp://hevc+pcma
+        url = "https://ds-ctmu-ningbo-g1-004.ovopark.com:5582/rtsp/21f796ca-46c4-4fb1-8cf2-526ea439316c.flv";//rtsp://hevc+pcma
         // 初始化播放器设置
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
@@ -127,20 +127,22 @@ public class RecordSampleActivity extends AppCompatActivity {
 
         long mLastStartTime = SystemClock.currentThreadTimeMillis();
 
-//        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
-//            @Override
-//            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-//                Log.e(TAG, "onInfo#position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
-//                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
-//                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
-//                    Log.i(TAG, "加载视频prepare耗时#=====================> " + takeTime + " ms");
-//                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
+        mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+                Log.e(TAG, "onInfo#video current position: " + mp.getCurrentPosition() + " what: " + what + " extra: " + extra);
+                if (IjkMediaPlayer.MP_STATE_PREPARED == what) {
+                    long takeTime = SystemClock.currentThreadTimeMillis() - mLastStartTime;
+                    Log.i(TAG, "加载视频prepare耗时#=====================> " + takeTime + " ms");
+                    // DO: 2020/3/31 真正的准备完成了，准备播放 ，回调到外面通知状态改变！。
 //                    mVideoView.setVolume(8.0f);
-//                }
-//                return false;
-//
-//            }
-//        });
+                } else if(IjkMediaPlayer.MEDIA_INFO_RECORD_FINISH == what) {
+                    Log.i(TAG, "MEDIA_INFO_RECORD_FINISH,record stop save local file success!");
+                }
+                return false;
+
+            }
+        });
 
         // 设置录制按钮的点击事件
 //        mRecordButton.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +230,9 @@ public class RecordSampleActivity extends AppCompatActivity {
     }
 
     private void stopRecord() {
+        Log.i(TAG, "stopRecord()~start");
+
+        long statTime = SystemClock.currentThreadTimeMillis();
         if (!isRecording) {
             Toast.makeText(this, "没有正在进行的录制", Toast.LENGTH_SHORT).show();
             return;
@@ -237,6 +242,8 @@ public class RecordSampleActivity extends AppCompatActivity {
         if (player != null) {
             int result = player.stopRecord();
             if (result == 0) {
+                long takeTime = SystemClock.currentThreadTimeMillis() - statTime;
+                Log.i(TAG, "stopRecord#success~end:time in millis:"+takeTime);
                 isRecording = false;
                 Toast.makeText(this, "录制已停止，文件保存在: " + mRecordPath, Toast.LENGTH_LONG).show();
             } else {
